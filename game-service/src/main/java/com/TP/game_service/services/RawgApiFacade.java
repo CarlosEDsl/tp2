@@ -1,6 +1,4 @@
-package com.TP.game_service.facade;
-
-import com.TP.game_service.builder.RawgUrlBuilder;
+package com.TP.game_service.services;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;

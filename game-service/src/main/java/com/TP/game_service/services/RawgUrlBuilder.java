@@ -1,4 +1,4 @@
-package com.TP.game_service.builder;
+package com.TP.game_service.services;
 
 import java.util.Properties;
 
