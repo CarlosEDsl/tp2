@@ -9,6 +9,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
 import java.util.Date;
+import java.util.UUID;
 import java.util.function.Function;
 
 @Component
@@ -33,8 +34,8 @@ public class JwtService {
         return extractClaim(token, Claims::getSubject);
     }
 
-    public String extractUserId(String token) {
-        return extractClaim(token, claims -> claims.get("userId", String.class));
+    public UUID extractUserId(String token) {
+        return extractClaim(token, claims -> claims.get("id", UUID.class));
     }
 
     private <T> T extractClaim(String token, Function<Claims, T> claimsResolver) {

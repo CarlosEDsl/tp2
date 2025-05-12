@@ -1,6 +1,7 @@
 package com.TP.game_service.controllers;
 
 import com.TP.game_service.models.DTOs.FavoriteGameRequestDTO;
+import com.TP.game_service.security.MinimalUserDetails;
 import com.TP.game_service.services.FavoriteGameService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -24,7 +25,8 @@ public class FavoriteGameController {
     @PostMapping()
     public ResponseEntity<Void> addFavoriteGame(@RequestBody FavoriteGameRequestDTO favoriteGame) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        UUID userId = UUID.fromString(auth.getName());
+        MinimalUserDetails user = (MinimalUserDetails) auth.getPrincipal();
+        UUID userId = user.getUserId();
 
         favoriteGameService.saveNewFavoriteGame(favoriteGame, userId);
 

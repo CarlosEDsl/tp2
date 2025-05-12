@@ -1,40 +1,40 @@
-package com.TP.account_service.security;
+package com.TP.game_service.security;
 
-import com.TP.account_service.models.User;
-import lombok.Getter;
 import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
-import java.util.List;
+import java.util.Collections;
 import java.util.UUID;
 
-@Getter
-public class UserDetailsImpl implements UserDetails {
+public class MinimalUserDetails implements UserDetails {
 
-    private final User user;
-    public UserDetailsImpl(User user){
-        this.user = user;
+    private final String username;
+    private final UUID userId;
+
+    public MinimalUserDetails(String username, UUID userId) {
+        this.username = username;
+        this.userId = userId;
+    }
+
+    public UUID getUserId() {
+        return userId;
     }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        List<SimpleGrantedAuthority> authorities = null;
-        return authorities;
+        return Collections.emptyList(); // ou roles se tiver no JWT
     }
 
     @Override
     public String getPassword() {
-        return this.user.getPasswordHash();
+        return null; // não é usado nesse contexto
     }
 
     @Override
     public String getUsername() {
-        return this.user.getUsername();
+        return username;
     }
-
-    public UUID getUserId() { return this.user.getId(); }
 
     @Override
     public boolean isAccountNonExpired() {
@@ -56,3 +56,4 @@ public class UserDetailsImpl implements UserDetails {
         return true;
     }
 }
+
