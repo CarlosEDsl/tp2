@@ -32,32 +32,29 @@ public class JwtAuthFilter extends OncePerRequestFilter {
 
         final String authHeader = request.getHeader("Authorization");
 
-        // Se não houver cabeçalho de autorização ou o token não começar com "Bearer ", passa para o próximo filtro
         if (authHeader == null || !authHeader.startsWith("Bearer ")) {
             filterChain.doFilter(request, response);
             return;
         }
 
-        // Extrai o token JWT do cabeçalho
         final String token = authHeader.substring(7);
-        String username = jwtService.extractUsername(token); // Extrai o nome de usuário do token
+        String username = jwtService.extractUsername(token);
         UUID userId = jwtService.extractUserId(token);
 
         if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
 
             MinimalUserDetails userDetails = new MinimalUserDetails(username, userId);
 
-            // Se o token for válido, cria o token de autenticação
+            System.out.println("Token válido? " + jwtService.isTokenValid(token, userDetails));
             if (jwtService.isTokenValid(token, userDetails)) {
                 UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
                         userDetails, null, userDetails.getAuthorities()
                 );
                 authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
-                SecurityContextHolder.getContext().setAuthentication(authToken); // Configura o contexto de segurança
+                SecurityContextHolder.getContext().setAuthentication(authToken);
             }
         }
 
-        // Continua o filtro
         filterChain.doFilter(request, response);
     }
 }

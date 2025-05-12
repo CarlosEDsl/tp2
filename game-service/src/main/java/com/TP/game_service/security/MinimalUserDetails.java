@@ -23,12 +23,12 @@ public class MinimalUserDetails implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return Collections.emptyList(); // ou roles se tiver no JWT
+        return Collections.emptyList();
     }
 
     @Override
     public String getPassword() {
-        return null; // não é usado nesse contexto
+        return null;
     }
 
     @Override

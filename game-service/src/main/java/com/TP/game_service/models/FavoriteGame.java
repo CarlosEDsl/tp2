@@ -13,7 +13,7 @@ import java.util.UUID;
 @NoArgsConstructor
 @AllArgsConstructor
 public class FavoriteGame {
-    public FavoriteGame(int gameId, UUID userId) {
+    public FavoriteGame(Long gameId, UUID userId) {
         this.gameId = gameId;
         this.userId = userId;
     }
@@ -22,7 +22,7 @@ public class FavoriteGame {
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
     @Column(name = "game_id")
-    private int gameId;
+    private Long gameId;
     @Column(name = "user_id")
     private UUID userId;
 }

@@ -10,7 +10,7 @@ import java.util.UUID;
 
 @Repository
 public interface FavoriteGameRepository extends JpaRepository<FavoriteGame, UUID> {
-    Optional<FavoriteGame> findByUserIdAndGameId(UUID userId, int gameId);
+    Optional<FavoriteGame> findByUserIdAndGameId(UUID userId, Long gameId);
 
     List<FavoriteGame> findFavoriteGamesByUserId(UUID userId);
 
