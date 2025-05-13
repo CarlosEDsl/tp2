@@ -35,7 +35,9 @@ public class JwtService {
     }
 
     public UUID extractUserId(String token) {
-        return extractClaim(token, claims -> claims.get("id", UUID.class));
+        String userIdStr = extractClaim(token, claims -> claims.get("userId", String.class));
+        UUID userId = UUID.fromString(userIdStr);
+        return userId;
     }
 
     private <T> T extractClaim(String token, Function<Claims, T> claimsResolver) {

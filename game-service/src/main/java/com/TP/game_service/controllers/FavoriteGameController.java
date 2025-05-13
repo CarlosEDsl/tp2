@@ -29,6 +29,7 @@ public class FavoriteGameController {
         try {
             Authentication auth = SecurityContextHolder.getContext().getAuthentication();
             MinimalUserDetails user = (MinimalUserDetails) auth.getPrincipal();
+
             UUID userId = user.getUserId();
             System.out.println(userId);
 
@@ -45,7 +46,7 @@ public class FavoriteGameController {
     }
 
     @GetMapping("/byId")
-    public ResponseEntity<FavoriteGame> getFavoriteGame(@RequestParam Long gameId) {
+    public ResponseEntity<FavoriteGame> getFavoriteGame(@RequestParam("gameId") Long gameId) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         MinimalUserDetails user = (MinimalUserDetails) auth.getPrincipal();
         UUID userId = user.getUserId();

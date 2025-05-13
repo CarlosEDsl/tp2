@@ -38,6 +38,7 @@ public class AuthController {
 
             UserDetailsImpl userDetails = (UserDetailsImpl) auth.getPrincipal();
             UUID userId = userDetails.getUserId();
+            System.out.println(userId);
 
             String token = jwtService.generateToken(dto.email(), userId);
             return ResponseEntity.ok(new AuthResponseDTO("Bearer " + token));
