@@ -11,6 +11,7 @@
     <modules>
         <module>account-service</module>
         <module>game-service</module>
+        <module>review-service</module>
     </modules>
 
     <properties>
