@@ -1,5 +1,6 @@
 package com.TP.game_service.services;
 
+import com.TP.game_service.models.DTOs.GameSearchRequest;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
@@ -14,20 +15,32 @@ public class RawgApiFacade {
     @Value("${rawg.api.key}")
     private String rawgApiKey;
 
-    public String getGameById(Long id) {
-        String url = new RawgUrlBuilder(rawgApiKey)
-                .getById(id)
-                .build();
+    public String searchGames(GameSearchRequest request) { //permite a criacao dinamica de um builder
+        RawgUrlBuilder builder = new RawgUrlBuilder(rawgApiKey)
+                .page(request.getPage())
+                .pageSize(request.getPageSize());
 
+        if (request.getSearch() != null) {
+            builder.search(request.getSearch());
+        }
+        if (request.getGenre() != null) {
+            builder.genre(request.getGenre());
+        }
+        if (request.getPlatform() != null) {
+            builder.platform(request.getPlatform());
+        }
+        if (request.getOrdering() != null) {
+            builder.ordering(request.getOrdering());
+        }
+
+        String url = builder.build();
         return sendGetRequest(url);
     }
 
-    public String listGamesByPage(int page) {
-        String url = new RawgUrlBuilder(rawgApiKey)
-                .page(page)
-                .build();
-
-        return sendGetRequest(url);
+    public String getGameById(Long gameId) {
+        RawgUrlBuilder builder = new RawgUrlBuilder(rawgApiKey)
+                .getById(gameId);
+        return sendGetRequest(builder.build());
     }
 
     private String sendGetRequest(String urlString) {

@@ -1,6 +1,7 @@
 package com.TP.game_service.services;
 
 import com.TP.game_service.adapter.GameAdapter;
+import com.TP.game_service.models.DTOs.GameSearchRequest;
 import com.TP.game_service.models.Game;
 import org.springframework.stereotype.Service;
 
@@ -16,9 +17,12 @@ public class GameService {
         this.adapter = adapter;
     }
 
-    public List<Game> listGamesByPage(int page) {
-        String response = facade.listGamesByPage(page);
-        return adapter.adaptList(response);
+    public List<Game> searchGames(GameSearchRequest request) { //permite a criacao dinamica de um builder
+        String response = facade.searchGames(request);
+
+        List<Game> games = adapter.adaptList(response);
+
+        return games;
     }
 
     public Game getGameById(Long id) {
