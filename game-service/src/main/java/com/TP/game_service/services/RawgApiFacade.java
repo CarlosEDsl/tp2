@@ -22,11 +22,9 @@ public class RawgApiFacade {
         return sendGetRequest(url);
     }
 
-    public String getGames(int page, String genre, String query) {
+    public String listGamesByPage(int page) {
         String url = new RawgUrlBuilder(rawgApiKey)
                 .page(page)
-                .genre(genre)
-                .search(query)
                 .build();
 
         return sendGetRequest(url);

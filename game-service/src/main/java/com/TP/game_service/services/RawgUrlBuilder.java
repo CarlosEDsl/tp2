@@ -10,27 +10,32 @@ public class RawgUrlBuilder {
     private String rawgApiKey;
 
     public RawgUrlBuilder(String apiKey) {
-        url = new StringBuilder("https://api.rawg.io/api/");
+        url = new StringBuilder("https://api.rawg.io/api/games");
         this.rawgApiKey = apiKey;
     }
 
     public RawgUrlBuilder page(int page) {
-        url.append("games?page=").append(page).append("&");
+        url.append("?page=").append(page).append("&");
+        return this;
+    }
+
+    public RawgUrlBuilder pageSize(int pageSize) {
+        url.append("?page_size=").append(pageSize).append("&");
         return this;
     }
 
     public RawgUrlBuilder genre(String genre) {
-        url.append("games?genre=").append(genre).append("&");
+        url.append("?genre=").append(genre).append("&");
         return this;
     }
 
     public RawgUrlBuilder search(String query) {
-        url.append("games?search=").append(query).append("&");
+        url.append("?search=").append(query).append("&");
         return this;
     }
 
     public RawgUrlBuilder getById(Long id) {
-        url.append("games/").append(id).append("?");
+        url.append("/").append(id).append("?");
         return this;
     }
 
