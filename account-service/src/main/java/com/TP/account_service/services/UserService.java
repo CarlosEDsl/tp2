@@ -5,6 +5,7 @@ import com.TP.account_service.models.DTOs.UserRequestDTO;
 import com.TP.account_service.repositories.UserRepository;
 import com.TP.account_service.models.DTOs.UserUpdateReqDTO;
 import com.TP.account_service.models.User;
+import com.google.api.client.googleapis.auth.oauth2.GoogleIdToken;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -69,6 +70,20 @@ public class UserService {
     public void deleteUser(UUID id) {
         User user = this.findUser(id);
         this.userRepository.delete(user);
+    }
+
+    public User getOrSaveGoogleAccount(GoogleIdToken.Payload payload) {
+        String email = payload.getEmail();
+
+        Optional<User> user = this.userRepository.findUserByEmail(email);
+
+        if(user.isPresent()){
+            return user.get();
+        }
+
+        String username = (String) payload.get("name");
+        User newUser = new User(username, email, "MasterPassword");
+        return this.userRepository.save(newUser);
     }
 
     private void uniqueEmailVerification(String email){

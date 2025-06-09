@@ -1,5 +1,7 @@
 package com.TP.account_service.controllers;
 
+import com.TP.account_service.loginStrategies.LoginStrategiesFactory;
+import com.TP.account_service.loginStrategies.LoginStrategy;
 import com.TP.account_service.models.DTOs.AuthRequestDTO;
 import com.TP.account_service.models.DTOs.AuthResponseDTO;
 import com.TP.account_service.security.JwtService;
@@ -21,26 +23,18 @@ import java.util.UUID;
 @RequestMapping("/auth")
 public class AuthController {
 
-    private final AuthenticationManager authManager;
-    private final JwtService jwtService;
+    private final LoginStrategiesFactory loginStrategiesFactory;
 
-    public AuthController(AuthenticationManager authManager, JwtService jwtService) {
-        this.authManager = authManager;
-        this.jwtService = jwtService;
+    public AuthController(LoginStrategiesFactory loginStrategiesFactory) {
+        this.loginStrategiesFactory = loginStrategiesFactory;
     }
 
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody AuthRequestDTO dto) {
         try {
-            Authentication auth = authManager.authenticate(
-                    new UsernamePasswordAuthenticationToken(dto.email(), dto.password())
-            );
+            LoginStrategy loginStrategy = loginStrategiesFactory.getLoginStrategy(dto.provider());
+            String token = loginStrategy.login(dto);
 
-            UserDetailsImpl userDetails = (UserDetailsImpl) auth.getPrincipal();
-            UUID userId = userDetails.getUserId();
-            System.out.println(userId);
-
-            String token = jwtService.generateToken(dto.email(), userId);
             return ResponseEntity.ok(new AuthResponseDTO("Bearer " + token));
         } catch (AuthenticationException e) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(e.getMessage());
