@@ -5,6 +5,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.List;
+
 @Getter
 @Setter
 @NoArgsConstructor
@@ -14,5 +16,8 @@ public class Game {
     private String name;
     private String released;
     private float rating;
+    private int ratings_count;
     private String background_image;
+    private List<Plataform> plataformList;
+    private List<Genre> genreList;
 }

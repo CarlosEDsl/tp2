@@ -1,7 +1,15 @@
 package com.TP.game_service.models;
 
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
 public class Plataform {
-    private int id;
+    private Long id;
     private String name;
-    private String image_background;
 }
