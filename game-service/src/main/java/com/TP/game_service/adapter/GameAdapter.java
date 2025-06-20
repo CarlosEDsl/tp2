@@ -1,6 +1,8 @@
 package com.TP.game_service.adapter;
 
 import com.TP.game_service.models.Game;
+import com.TP.game_service.models.Genre;
+import com.TP.game_service.models.Plataform;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.stereotype.Service;
@@ -10,6 +12,13 @@ import java.util.List;
 
 @Service
 public class GameAdapter {
+    private PlatformAdapter platformAdapter;
+    private GenreAdapter genreAdapter;
+
+    public GameAdapter(PlatformAdapter platformAdapter, GenreAdapter genreAdapter) {
+        this.platformAdapter = platformAdapter;
+        this.genreAdapter = genreAdapter;
+    }
 
     public Game adapt(String response) {
         try {
@@ -20,9 +29,13 @@ public class GameAdapter {
             String name = json.get("name").asText();
             String released = json.get("released").asText();
             float rating = (float) json.get("rating").asDouble();
+            int ratings_count = json.get("ratings_count").asInt();
             String backgroundImage = json.get("background_image").asText();
 
-            return new Game(id, name, released, rating, backgroundImage);
+            List<Plataform> plataforms = platformAdapter.adaptList(json);
+            List<Genre> genres = genreAdapter.adaptList(json);
+
+            return new Game(id, name, released, rating, ratings_count, backgroundImage, plataforms, genres);
         } catch (Exception e) {
             throw new RuntimeException("Erro ao adaptar Game: " + e.getMessage(), e);
         }
@@ -36,14 +49,18 @@ public class GameAdapter {
             List<Game> games = new ArrayList<>();
 
             if (results != null && results.isArray()) {
-                for (JsonNode node : results) {
-                    Long id = node.get("id").asLong();
-                    String name = node.get("name").asText();
-                    String released = node.hasNonNull("released") ? node.get("released").asText() : null;
-                    float rating = node.hasNonNull("rating") ? (float) node.get("rating").asDouble() : 0.0f;
-                    String backgroundImage = node.hasNonNull("background_image") ? node.get("background_image").asText() : null;
+                for (JsonNode json : results) {
+                    Long id = json.get("id").asLong();
+                    String name = json.get("name").asText();
+                    String released = json.get("released").asText();
+                    float rating = (float) json.get("rating").asDouble();
+                    int ratings_count = json.get("ratings_count").asInt();
+                    String backgroundImage = json.get("background_image").asText();
 
-                    Game game = new Game(id, name, released, rating, backgroundImage);
+                    List<Plataform> plataforms = platformAdapter.adaptList(json);
+                    List<Genre> genres = genreAdapter.adaptList(json);
+
+                    Game game = new Game(id, name, released, rating, ratings_count, backgroundImage, plataforms, genres);
                     games.add(game);
                 }
             }
