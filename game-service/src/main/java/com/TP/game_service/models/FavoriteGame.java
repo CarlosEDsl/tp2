@@ -8,7 +8,7 @@ import lombok.NoArgsConstructor;
 import java.util.UUID;
 
 @Entity
-@Table(name = "favourite_game")
+@Table(name = "favorite_game")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor

@@ -1,5 +1,6 @@
 package com.TP.game_service.services;
 
+import com.TP.game_service.facade.RawgApiFacade;
 import com.TP.game_service.models.DTOs.FavoriteGameRequestDTO;
 import com.TP.game_service.models.FavoriteGame;
 import com.TP.game_service.repositories.FavoriteGameRepository;
