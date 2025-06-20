@@ -1,6 +1,11 @@
-package com.TP.game_service.services;
+package com.TP.game_service.facade;
 
+import com.TP.game_service.builders.GenresUrlBuilder;
+import com.TP.game_service.builders.PlatformsUrlBuilder;
 import com.TP.game_service.models.DTOs.GameSearchRequest;
+import com.TP.game_service.builders.GamesUrlBuilder;
+import com.TP.game_service.models.DTOs.GenreSearchRequest;
+import com.TP.game_service.models.DTOs.PlatformSearchRequest;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
@@ -16,7 +21,7 @@ public class RawgApiFacade {
     private String rawgApiKey;
 
     public String searchGames(GameSearchRequest request) { //permite a criacao dinamica de um builder
-        RawgUrlBuilder builder = new RawgUrlBuilder(rawgApiKey)
+        GamesUrlBuilder builder = new GamesUrlBuilder(rawgApiKey)
                 .page(request.getPage())
                 .pageSize(request.getPageSize());
 
@@ -38,9 +43,35 @@ public class RawgApiFacade {
     }
 
     public String getGameById(Long gameId) {
-        RawgUrlBuilder builder = new RawgUrlBuilder(rawgApiKey)
+        GamesUrlBuilder builder = new GamesUrlBuilder(rawgApiKey)
                 .getById(gameId);
         return sendGetRequest(builder.build());
+    }
+
+    public String searchPlatforms(PlatformSearchRequest request) {
+        PlatformsUrlBuilder builder = new PlatformsUrlBuilder(rawgApiKey)
+                .page(request.getPage())
+                .pageSize(request.getPageSize());
+
+        if (request.getOrdering() != null) {
+            builder.ordering(request.getOrdering());
+        }
+
+        String url = builder.build();
+        return sendGetRequest(url);
+    }
+
+    public String searchGenres(GenreSearchRequest request) {
+        GenresUrlBuilder builder = new GenresUrlBuilder(rawgApiKey)
+                .page(request.getPage())
+                .pageSize(request.getPageSize());
+
+        if (request.getOrdering() != null) {
+            builder.ordering(request.getOrdering());
+        }
+
+        String url = builder.build();
+        return sendGetRequest(url);
     }
 
     private String sendGetRequest(String urlString) {
