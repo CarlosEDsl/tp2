@@ -1,8 +1,5 @@
 package com.TP.game_service.builders;
 
-import org.springframework.stereotype.Service;
-
-@Service
 public class PlatformsUrlBuilder {
     private final StringBuilder url;
     private String rawgApiKey;

@@ -18,6 +18,6 @@ public class Game {
     private float rating;
     private int ratings_count;
     private String background_image;
-    private List<Plataform> plataformList;
-    private List<Genre> genreList;
+    private List<Plataform> plataforms;
+    private List<Genre> genres;
 }

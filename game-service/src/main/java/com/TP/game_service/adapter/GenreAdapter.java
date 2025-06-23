@@ -12,6 +12,17 @@ import java.util.List;
 @Service
 public class GenreAdapter {
 
+    public Genre adapt(JsonNode responseNode) {
+        try {
+            Long id = responseNode.get("id").asLong();
+            String name = responseNode.get("name").asText();
+
+            return new Genre(id, name);
+        } catch (Exception e) {
+            throw new RuntimeException("Erro ao adaptar Genero: " + e.getMessage(), e);
+        }
+    }
+
     public List<Genre> adaptList(String jsonArrayResponse) {
         try {
             ObjectMapper mapper = new ObjectMapper();

@@ -32,10 +32,24 @@ public class GameAdapter {
             int ratings_count = json.get("ratings_count").asInt();
             String backgroundImage = json.get("background_image").asText();
 
-            List<Plataform> plataforms = platformAdapter.adaptList(json);
-            List<Genre> genres = genreAdapter.adaptList(json);
+            List<Plataform> platforms = new ArrayList<>();
+            for (JsonNode node : json.get("platforms")) {
+                JsonNode platformNode = node.get("platform");
+                if (platformNode != null) {
+                    Plataform platform = platformAdapter.adapt(platformNode);
+                    platforms.add(platform);
+                }
+            }
 
-            return new Game(id, name, released, rating, ratings_count, backgroundImage, plataforms, genres);
+            List<Genre> genres = new ArrayList<>();
+            for(JsonNode node : json.get("genres")){
+                if(node != null){
+                    Genre genre = genreAdapter.adapt(node);
+                    genres.add(genre);
+                }
+            }
+
+            return new Game(id, name, released, rating, ratings_count, backgroundImage, platforms, genres);
         } catch (Exception e) {
             throw new RuntimeException("Erro ao adaptar Game: " + e.getMessage(), e);
         }
@@ -57,10 +71,24 @@ public class GameAdapter {
                     int ratings_count = json.get("ratings_count").asInt();
                     String backgroundImage = json.get("background_image").asText();
 
-                    List<Plataform> plataforms = platformAdapter.adaptList(json);
-                    List<Genre> genres = genreAdapter.adaptList(json);
+                    List<Plataform> platforms = new ArrayList<>();
+                    for (JsonNode node : json.get("platforms")) {
+                        JsonNode platformNode = node.get("platform"); // CORREÇÃO AQUI
+                        if (platformNode != null) {
+                            Plataform platform = platformAdapter.adapt(platformNode);
+                            platforms.add(platform);
+                        }
+                    }
 
-                    Game game = new Game(id, name, released, rating, ratings_count, backgroundImage, plataforms, genres);
+                    List<Genre> genres = new ArrayList<>();
+                    for(JsonNode node : json.get("genres")){
+                        if(node != null){
+                            Genre genre = genreAdapter.adapt(node);
+                            genres.add(genre);
+                        }
+                    }
+
+                    Game game = new Game(id, name, released, rating, ratings_count, backgroundImage, platforms, genres);
                     games.add(game);
                 }
             }

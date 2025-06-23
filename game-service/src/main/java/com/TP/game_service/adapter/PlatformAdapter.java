@@ -1,6 +1,7 @@
 package com.TP.game_service.adapter;
 
 import com.TP.game_service.models.Game;
+import com.TP.game_service.models.Genre;
 import com.TP.game_service.models.Plataform;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -11,6 +12,17 @@ import java.util.List;
 
 @Service
 public class PlatformAdapter {
+
+    public Plataform adapt(JsonNode responseNode) {
+        try {
+            Long id = responseNode.get("id").asLong();
+            String name = responseNode.get("name").asText();
+
+            return new Plataform(id, name);
+        } catch (Exception e) {
+            throw new RuntimeException("Erro ao adaptar Plataforma: " + e.getMessage(), e);
+        }
+    }
 
     public List<Plataform> adaptList(String jsonArrayResponse) {
         try {
