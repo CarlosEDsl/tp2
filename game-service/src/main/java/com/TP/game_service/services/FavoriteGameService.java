@@ -48,7 +48,13 @@ public class FavoriteGameService {
         return favoriteGameRepository.findFavoriteGamesByUserId(userId);
     }
 
-    public void deleteFavoriteGame(Long gameId, UUID userId) {
-        favoriteGameRepository.deleteByUserIdAndGameId(userId, gameId);
+    public boolean deleteFavoriteGame(Long gameId, UUID userId) {
+        Optional<FavoriteGame> exists = favoriteGameRepository.findByUserIdAndGameId(userId, gameId);
+        if(exists.isPresent()) {
+            favoriteGameRepository.delete(exists.get());
+            return true;
+        } else {
+            return false;
+        }
     }
 }

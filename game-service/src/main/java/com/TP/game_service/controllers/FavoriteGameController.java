@@ -32,7 +32,9 @@ public class FavoriteGameController {
             MinimalUserDetails user = (MinimalUserDetails) auth.getPrincipal();
 
             UUID userId = user.getUserId();
-            System.out.println(userId);
+            if(gameId == null || gameId < 0) {
+                return ResponseEntity.badRequest().body("ID do jogo inválido");
+            }
 
             favoriteGameService.saveNewFavoriteGame(gameId, userId);
 
@@ -65,18 +67,28 @@ public class FavoriteGameController {
         UUID userId = user.getUserId();
 
         List<FavoriteGame> favoriteGames = favoriteGameService.getAllFavoriteGamesByUserId(userId);
+        if(favoriteGames.isEmpty()) {
+            return ResponseEntity.noContent().build();
+        }
 
         return new ResponseEntity<>(favoriteGames, HttpStatus.OK);
     }
 
     @DeleteMapping()
-    public ResponseEntity<FavoriteGame> deleteFavoriteGame(@RequestParam("gameId") Long gameId) {
+    public ResponseEntity<?> deleteFavoriteGame(@RequestParam("gameId") Long gameId) {
         try {
             Authentication auth = SecurityContextHolder.getContext().getAuthentication();
             MinimalUserDetails user = (MinimalUserDetails) auth.getPrincipal();
             UUID userId = user.getUserId();
+            if(gameId == null || gameId < 0) {
+                return ResponseEntity.badRequest().body("ID do jogo inválido");
+            }
 
-            favoriteGameService.deleteFavoriteGame(gameId, userId);
+            Boolean result = favoriteGameService.deleteFavoriteGame(gameId, userId);
+            if(!result){
+                return ResponseEntity.notFound().build();
+            }
+
             return ResponseEntity.noContent().build();
         } catch (Exception e) {
             throw new RuntimeException(e);

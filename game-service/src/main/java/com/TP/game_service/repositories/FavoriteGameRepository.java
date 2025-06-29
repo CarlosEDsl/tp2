@@ -14,7 +14,4 @@ public interface FavoriteGameRepository extends JpaRepository<FavoriteGame, UUID
     Optional<FavoriteGame> findByUserIdAndGameId(UUID userId, Long gameId);
 
     List<FavoriteGame> findFavoriteGamesByUserId(UUID userId);
-
-    @Transactional
-    void deleteByUserIdAndGameId(UUID userId, Long gameId);
 }
