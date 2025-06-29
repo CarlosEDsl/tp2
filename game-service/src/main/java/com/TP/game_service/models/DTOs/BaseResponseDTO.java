@@ -5,15 +5,15 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.List;
+
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class GameSearchRequest {
-    private int page = 1;
-    private int pageSize = 50;
-    private String search;
-    private String genre;
-    private Long platform;
-    private String ordering;
+public class BaseResponseDTO<T> {
+    private Double count;
+    private String next;
+    private String previous;
+    private List<T> results;
 }

@@ -1,19 +1,22 @@
 package com.TP.game_service.builders;
 
+import org.springframework.beans.factory.annotation.Value;
+
 public class GamesUrlBuilder {
-    private final StringBuilder url;
+    private StringBuilder url;
     private String rawgApiKey;
 
-    public GamesUrlBuilder(String apiKey) {
+    public GamesUrlBuilder(String rawgApiKey) {
         url = new StringBuilder("https://api.rawg.io/api/games?");
-        this.rawgApiKey = apiKey;
+        this.rawgApiKey = rawgApiKey;
     }
 
     public GamesUrlBuilder getById(Long id) { //para passar o id do game
         url.setLength(0);
         url.append("https://api.rawg.io/api/games/")
                 .append(id)
-                .append("?");
+                .append("?")
+                .append(rawgApiKey);
         return this;
     }
 
@@ -44,6 +47,21 @@ public class GamesUrlBuilder {
 
     public GamesUrlBuilder ordering(String order) { //ordena os jogos em uma ordem baseado em uma variavel especifica
         url.append("&ordering=-").append(order).append("&");
+        return this;
+    }
+
+    public GamesUrlBuilder stores(int storeId) {
+        url.append("&stores=").append(storeId).append("&");
+        return this;
+    }
+
+    public GamesUrlBuilder searchExact(Boolean query) {
+        url.append("&search_exact=").append(query).append("&");
+        return this;
+    }
+
+    public GamesUrlBuilder searchPrecise(Boolean query) {
+        url.append("&search_precise=").append(query).append("&");
         return this;
     }
 

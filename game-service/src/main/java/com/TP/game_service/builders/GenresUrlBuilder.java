@@ -1,19 +1,22 @@
 package com.TP.game_service.builders;
 
+import org.springframework.beans.factory.annotation.Value;
+
 public class GenresUrlBuilder {
-    private final StringBuilder url;
+    private StringBuilder url;
     private String rawgApiKey;
 
-    public GenresUrlBuilder(String apiKey) {
+    public GenresUrlBuilder(String rawgApiKey) {
         url = new StringBuilder("https://api.rawg.io/api/genres?");
-        this.rawgApiKey = apiKey;
+        this.rawgApiKey = rawgApiKey;
     }
 
     public GenresUrlBuilder getById(Long id) {
         url.setLength(0);
         url.append("https://api.rawg.io/api/genres/")
                 .append(id)
-                .append("?");
+                .append("?")
+                .append(rawgApiKey);
         return this;
     }
 

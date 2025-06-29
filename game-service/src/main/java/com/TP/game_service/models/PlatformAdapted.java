@@ -9,7 +9,7 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class Plataform {
+public class PlatformAdapted {
     private Long id;
     private String name;
 }

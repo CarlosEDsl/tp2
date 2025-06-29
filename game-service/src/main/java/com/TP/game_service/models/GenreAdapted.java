@@ -9,7 +9,7 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class Genre {
+public class GenreAdapted {
     private Long id;
     private String name;
 }

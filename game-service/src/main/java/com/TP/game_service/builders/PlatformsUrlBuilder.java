@@ -1,19 +1,22 @@
 package com.TP.game_service.builders;
 
+import org.springframework.beans.factory.annotation.Value;
+
 public class PlatformsUrlBuilder {
-    private final StringBuilder url;
+    private StringBuilder url;
     private String rawgApiKey;
 
-    public PlatformsUrlBuilder(String apiKey) {
+    public PlatformsUrlBuilder(String rawgApiKey) {
         url = new StringBuilder("https://api.rawg.io/api/platforms?");
-        this.rawgApiKey = apiKey;
+        this.rawgApiKey = rawgApiKey;
     }
 
     public PlatformsUrlBuilder getById(Long id) {
         url.setLength(0);
         url.append("https://api.rawg.io/api/platforms/")
                 .append(id)
-                .append("?");
+                .append("?")
+                .append(rawgApiKey);
         return this;
     }
 

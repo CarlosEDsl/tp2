@@ -12,6 +12,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -25,7 +26,7 @@ public class FavoriteGameController {
     }
 
     @PostMapping()
-    public ResponseEntity<String> addFavoriteGame(@RequestBody FavoriteGameRequestDTO favoriteGame) {
+    public ResponseEntity<String> addFavoriteGame(@RequestParam("gameId") Long gameId) {
         try {
             Authentication auth = SecurityContextHolder.getContext().getAuthentication();
             MinimalUserDetails user = (MinimalUserDetails) auth.getPrincipal();
@@ -33,7 +34,7 @@ public class FavoriteGameController {
             UUID userId = user.getUserId();
             System.out.println(userId);
 
-            favoriteGameService.saveNewFavoriteGame(favoriteGame, userId);
+            favoriteGameService.saveNewFavoriteGame(gameId, userId);
 
             return ResponseEntity.ok().build();
         } catch (HttpMessageNotReadableException e) {
@@ -45,7 +46,7 @@ public class FavoriteGameController {
         }
     }
 
-    @GetMapping("/byId")
+    @GetMapping("/getById")
     public ResponseEntity<FavoriteGame> getFavoriteGame(@RequestParam("gameId") Long gameId) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         MinimalUserDetails user = (MinimalUserDetails) auth.getPrincipal();
@@ -55,5 +56,30 @@ public class FavoriteGameController {
 
         return game.map(ResponseEntity::ok)
                 .orElseGet(() -> ResponseEntity.notFound().build());
+    }
+
+    @GetMapping("/getAll")
+    public ResponseEntity<List<FavoriteGame>> getAllFavoriteGames() {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        MinimalUserDetails user = (MinimalUserDetails) auth.getPrincipal();
+        UUID userId = user.getUserId();
+
+        List<FavoriteGame> favoriteGames = favoriteGameService.getAllFavoriteGamesByUserId(userId);
+
+        return new ResponseEntity<>(favoriteGames, HttpStatus.OK);
+    }
+
+    @DeleteMapping()
+    public ResponseEntity<FavoriteGame> deleteFavoriteGame(@RequestParam("gameId") Long gameId) {
+        try {
+            Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+            MinimalUserDetails user = (MinimalUserDetails) auth.getPrincipal();
+            UUID userId = user.getUserId();
+
+            favoriteGameService.deleteFavoriteGame(gameId, userId);
+            return ResponseEntity.noContent().build();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
 }

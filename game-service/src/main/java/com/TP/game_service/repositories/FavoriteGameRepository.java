@@ -1,6 +1,7 @@
 package com.TP.game_service.repositories;
 
 import com.TP.game_service.models.FavoriteGame;
+import jakarta.transaction.Transactional;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -14,5 +15,6 @@ public interface FavoriteGameRepository extends JpaRepository<FavoriteGame, UUID
 
     List<FavoriteGame> findFavoriteGamesByUserId(UUID userId);
 
-    void deleteByUserIdAndGameId(UUID userId, int gameId);
+    @Transactional
+    void deleteByUserIdAndGameId(UUID userId, Long gameId);
 }

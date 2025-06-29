@@ -1,16 +1,16 @@
 package com.TP.game_service.controllers;
 
-import com.TP.game_service.models.DTOs.GameSearchRequest;
+import com.TP.game_service.models.DTOs.BaseResponseDTO;
+import com.TP.game_service.models.DTOs.GameSearchRequestDTO;
 import com.TP.game_service.models.DTOs.GenreSearchRequest;
 import com.TP.game_service.models.DTOs.PlatformSearchRequest;
-import com.TP.game_service.models.Game;
-import com.TP.game_service.models.Genre;
-import com.TP.game_service.models.Plataform;
+import com.TP.game_service.models.GameAdapted;
+import com.TP.game_service.models.GameExtraInfoAdapted;
+import com.TP.game_service.models.GenreAdapted;
+import com.TP.game_service.models.PlatformAdapted;
 import com.TP.game_service.services.CatalogoService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("/catalogo")
@@ -21,27 +21,23 @@ public class CatalogoController {
         this.catalogoService = catalogoService;
     }
 
-    @GetMapping("/gameById")
-    public ResponseEntity<Game> getGameById(@RequestParam("gameId")Long gameId) {
-        Game game =  catalogoService.getGameById(gameId);
-        return ResponseEntity.ok(game);
+    @GetMapping("/rawg/gameById")
+    public ResponseEntity<GameExtraInfoAdapted> getGameById(@RequestParam("gameId")Long gameId) {
+        return ResponseEntity.ok(catalogoService.getGameById(gameId));
     }
 
-    @GetMapping("/searchGames")
-    public ResponseEntity<List<Game>> searchGames(@RequestBody GameSearchRequest request) {
-        List<Game> games =  catalogoService.searchGames(request);
-        return ResponseEntity.ok(games);
+    @GetMapping("/rawg/searchGames")
+    public ResponseEntity<BaseResponseDTO<GameAdapted>> searchGames(@RequestBody GameSearchRequestDTO request) {
+        return ResponseEntity.ok(catalogoService.searchGames(request));
     }
 
-    @GetMapping("/searchPlatforms")
-    public ResponseEntity<List<Plataform>> searchPlatforms(@RequestBody PlatformSearchRequest request) {
-        List<Plataform> plataforms =  catalogoService.searchPlatforms(request);
-        return ResponseEntity.ok(plataforms);
+    @GetMapping("/rawg/searchPlatforms")
+    public ResponseEntity<BaseResponseDTO<PlatformAdapted>> searchPlatforms(@RequestBody PlatformSearchRequest request) {
+        return ResponseEntity.ok(catalogoService.searchPlatforms(request));
     }
 
-    @GetMapping("/searchGenres")
-    public ResponseEntity<List<Genre>> searchGenres(@RequestBody GenreSearchRequest request) {
-        List<Genre> genres = catalogoService.searchGenres(request);
-        return ResponseEntity.ok(genres);
+    @GetMapping("/rawg/searchGenres")
+    public ResponseEntity<BaseResponseDTO<GenreAdapted>> searchGenres(@RequestBody GenreSearchRequest request) {
+        return ResponseEntity.ok(catalogoService.searchGenres(request));
     }
 }
