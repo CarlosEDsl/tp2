@@ -5,9 +5,11 @@ import com.TP.game_service.services.facade.ExternalApiUrlsFacade;
 import com.TP.game_service.models.DTOs.FavoriteGameRequestDTO;
 import com.TP.game_service.models.FavoriteGame;
 import com.TP.game_service.repositories.FavoriteGameRepository;
+import com.TP.game_service.util.customExceptions.GameAlreadyFavoritedException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
+import org.hibernate.sql.ast.tree.predicate.ExistsPredicate;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -20,23 +22,28 @@ public class FavoriteGameService {
     private final FavoriteGameRepository favoriteGameRepository;
     private final CatalogoService catalogoService;
 
-    public void saveNewFavoriteGame(Long gameId, UUID userId) {
-        GameExtraInfoAdapted gameInfo = catalogoService.getGameById(gameId);
+    public FavoriteGame saveNewFavoriteGame(Long gameId, UUID userId) throws Exception {
+        try {
+            GameExtraInfoAdapted gameInfo = catalogoService.getGameById(gameId);
 
-        if (gameInfo == null) {
-            System.out.println("Erro na resposta: Nenhuma resposta recebida.");
-            return;
+            if (gameInfo == null) {
+                return null;
+            }
+
+            boolean exists = favoriteGameRepository
+                    .findByUserIdAndGameId(userId, gameId)
+                    .isPresent();
+
+            if (!exists) {
+                FavoriteGame newFavoriteGame = new FavoriteGame(gameId, userId);
+                favoriteGameRepository.save(newFavoriteGame);
+                return newFavoriteGame;
+            } else {
+                throw new GameAlreadyFavoritedException("Jogo já está nos seus favoritos");
+            }
         }
-
-        boolean exists = favoriteGameRepository
-                .findByUserIdAndGameId(userId, gameId)
-                .isPresent();
-
-        if (!exists) {
-            System.out.println(userId);
-            FavoriteGame newFavoriteGame = new FavoriteGame(gameId, userId);
-            System.out.println(gameId);
-            favoriteGameRepository.save(newFavoriteGame);
+        catch (Exception e) {
+            throw e;
         }
     }
 

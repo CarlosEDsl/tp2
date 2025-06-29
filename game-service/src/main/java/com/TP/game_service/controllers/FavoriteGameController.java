@@ -4,6 +4,7 @@ import com.TP.game_service.models.DTOs.FavoriteGameRequestDTO;
 import com.TP.game_service.models.FavoriteGame;
 import com.TP.game_service.security.MinimalUserDetails;
 import com.TP.game_service.services.FavoriteGameService;
+import com.TP.game_service.util.customExceptions.GameAlreadyFavoritedException;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -26,22 +27,28 @@ public class FavoriteGameController {
     }
 
     @PostMapping()
-    public ResponseEntity<String> addFavoriteGame(@RequestParam("gameId") Long gameId) {
+    public ResponseEntity<?> addFavoriteGame(@RequestParam("gameId") Long gameId) {
         try {
             Authentication auth = SecurityContextHolder.getContext().getAuthentication();
             MinimalUserDetails user = (MinimalUserDetails) auth.getPrincipal();
 
             UUID userId = user.getUserId();
-            if(gameId == null || gameId < 0) {
-                return ResponseEntity.badRequest().body("ID do jogo inválido");
+            if(gameId <= 0) {
+                return ResponseEntity.badRequest().body("ID do jogo não pode ser negativo ou igual a zero");
             }
 
-            favoriteGameService.saveNewFavoriteGame(gameId, userId);
+            FavoriteGame newFavoriteGame = favoriteGameService.saveNewFavoriteGame(gameId, userId);
+            if(newFavoriteGame == null) {
+                return ResponseEntity.notFound().build();
+            }
 
-            return ResponseEntity.ok().build();
+            return ResponseEntity.ok(newFavoriteGame);
         } catch (HttpMessageNotReadableException e) {
             e.printStackTrace();
             return ResponseEntity.badRequest().body("Erro ao processar os dados. Verifique o formato da requisição."); // Mensagem personalizada
+        } catch (GameAlreadyFavoritedException e) {
+            e.printStackTrace();
+            return ResponseEntity.badRequest().body(e.getMessage());
         } catch (Exception e) {
             e.printStackTrace();
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Erro interno. Tente novamente mais tarde.");
@@ -49,10 +56,14 @@ public class FavoriteGameController {
     }
 
     @GetMapping("/getById")
-    public ResponseEntity<FavoriteGame> getFavoriteGame(@RequestParam("gameId") Long gameId) {
+    public ResponseEntity<?> getFavoriteGame(@RequestParam("gameId") Long gameId) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         MinimalUserDetails user = (MinimalUserDetails) auth.getPrincipal();
         UUID userId = user.getUserId();
+
+        if(gameId <= 0) {
+            return ResponseEntity.badRequest().body("ID do jogo não pode ser negativo ou igual a zero");
+        }
 
         Optional<FavoriteGame> game = favoriteGameService.getFavoriteGameByGameIdAndUserId(gameId, userId);
 

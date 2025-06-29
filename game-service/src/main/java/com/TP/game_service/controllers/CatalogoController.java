@@ -9,6 +9,7 @@ import org.hibernate.annotations.NotFound;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 
 @RestController
 @RequestMapping("/catalogo")
@@ -22,8 +23,8 @@ public class CatalogoController {
     @GetMapping("/rawg/gameById")
     public ResponseEntity<?> getGameById(@RequestParam("gameId")Long gameId) {
         try {
-            if (gameId == null || gameId <= 0) {
-                return ResponseEntity.badRequest().body("ID do jogo inválido.");
+            if (gameId <= 0) {
+                return ResponseEntity.badRequest().body("ID do jogo não pode ser negativo ou igual a zero.");
             }
 
             GameExtraInfoAdapted game = catalogoService.getGameById(gameId);

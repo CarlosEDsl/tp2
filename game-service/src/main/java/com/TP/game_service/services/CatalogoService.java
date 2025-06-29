@@ -43,7 +43,7 @@ public class CatalogoService {
             return responseAdapted;
         }
         catch (Exception e) {
-            throw new RuntimeException(e);
+            throw e;
         }
     }
 
@@ -65,7 +65,7 @@ public class CatalogoService {
             return responseAdapted;
         }
         catch (Exception e) {
-            throw new RuntimeException(e);
+            throw e;
         }
     }
 
@@ -87,7 +87,7 @@ public class CatalogoService {
             return responseAdapted;
         }
         catch (Exception e) {
-            throw new RuntimeException(e);
+            throw e;
         }
     }
 
@@ -109,7 +109,7 @@ public class CatalogoService {
             return responseAdapted;
         }
         catch (Exception e) {
-            throw new RuntimeException(e);
+            throw e;
         }
     }
 }
