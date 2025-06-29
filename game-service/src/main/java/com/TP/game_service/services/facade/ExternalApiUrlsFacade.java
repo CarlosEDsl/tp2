@@ -2,10 +2,10 @@ package com.TP.game_service.services.facade;
 
 import com.TP.game_service.builders.GenresUrlBuilder;
 import com.TP.game_service.builders.PlatformsUrlBuilder;
+import com.TP.game_service.builders.StoresUrlBuilder;
 import com.TP.game_service.models.DTOs.GameSearchRequestDTO;
 import com.TP.game_service.builders.GamesUrlBuilder;
-import com.TP.game_service.models.DTOs.GenreSearchRequest;
-import com.TP.game_service.models.DTOs.PlatformSearchRequest;
+import com.TP.game_service.models.DTOs.BaseSearchRequestDTO;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
@@ -54,7 +54,7 @@ public class ExternalApiUrlsFacade {
         return url;
     }
 
-    public String searchPlatforms(PlatformSearchRequest request) {
+    public String searchPlatforms(BaseSearchRequestDTO request) {
         PlatformsUrlBuilder builder = new PlatformsUrlBuilder(rawgApiKey)
                 .page(request.getPage())
                 .pageSize(request.getPageSize());
@@ -67,8 +67,21 @@ public class ExternalApiUrlsFacade {
         return url;
     }
 
-    public String searchGenres(GenreSearchRequest request) {
+    public String searchGenres(BaseSearchRequestDTO request) {
         GenresUrlBuilder builder = new GenresUrlBuilder(rawgApiKey)
+                .page(request.getPage())
+                .pageSize(request.getPageSize());
+
+        if (request.getOrdering() != null) {
+            builder.ordering(request.getOrdering());
+        }
+
+        String url = builder.build();
+        return url;
+    }
+
+    public String searchStores(BaseSearchRequestDTO request) {
+        StoresUrlBuilder builder = new StoresUrlBuilder(rawgApiKey)
                 .page(request.getPage())
                 .pageSize(request.getPageSize());
 

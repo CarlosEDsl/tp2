@@ -1,18 +1,11 @@
 package com.TP.game_service.services;
 
+import com.TP.game_service.models.*;
 import com.TP.game_service.models.DTOs.BaseResponseDTO;
-import com.TP.game_service.models.GameExtraInfoAdapted;
-import com.TP.game_service.models.Rawg.Game;
-import com.TP.game_service.models.Rawg.GameExtraInfo;
-import com.TP.game_service.models.Rawg.Genre;
-import com.TP.game_service.models.Rawg.PlatformInfo;
+import com.TP.game_service.models.Rawg.*;
 import com.TP.game_service.services.facade.ExternalApiUrlsFacade;
 import com.TP.game_service.models.DTOs.GameSearchRequestDTO;
-import com.TP.game_service.models.DTOs.GenreSearchRequest;
-import com.TP.game_service.models.DTOs.PlatformSearchRequest;
-import com.TP.game_service.models.GameAdapted;
-import com.TP.game_service.models.GenreAdapted;
-import com.TP.game_service.models.PlatformAdapted;
+import com.TP.game_service.models.DTOs.BaseSearchRequestDTO;
 import com.TP.game_service.services.facade.RawgAdaptedModelsFacade;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -54,8 +47,8 @@ public class CatalogoService {
         }
     }
 
-    public BaseResponseDTO<PlatformAdapted> searchPlatforms(PlatformSearchRequest request) {
-        BaseResponseDTO<PlatformInfo> response = externalRawgApiClient.searchPlatforms(externalApiUrlsFacade.searchPlatforms(request));
+    public BaseResponseDTO<PlatformAdapted> searchPlatforms(BaseSearchRequestDTO request) {
+        BaseResponseDTO<PlatformComplete> response = externalRawgApiClient.searchPlatforms(externalApiUrlsFacade.searchPlatforms(request));
         List<PlatformAdapted> platforms = rawgAdaptedModelsFacade.searchPlatforms(response.getResults());
 
         BaseResponseDTO<PlatformAdapted> responseAdapted = new BaseResponseDTO<PlatformAdapted>(
@@ -67,8 +60,8 @@ public class CatalogoService {
         return responseAdapted;
     }
 
-    public BaseResponseDTO<GenreAdapted> searchGenres(GenreSearchRequest request) {
-        BaseResponseDTO<Genre> response = externalRawgApiClient.searchGenres(externalApiUrlsFacade.searchGenres(request));
+    public BaseResponseDTO<GenreAdapted> searchGenres(BaseSearchRequestDTO request) {
+        BaseResponseDTO<GenreComplete> response = externalRawgApiClient.searchGenres(externalApiUrlsFacade.searchGenres(request));
 
         List<GenreAdapted> genres = rawgAdaptedModelsFacade.searchGenres(response.getResults());
 
@@ -77,6 +70,20 @@ public class CatalogoService {
                 response.getNext(),
                 response.getPrevious(),
                 genres
+        );
+        return responseAdapted;
+    }
+
+    public BaseResponseDTO<StoreAdapted> searchStores(BaseSearchRequestDTO request) {
+        BaseResponseDTO<StoreComplete> response = externalRawgApiClient.searchStores(externalApiUrlsFacade.searchStores(request));
+
+        List<StoreAdapted> stores = rawgAdaptedModelsFacade.searchStores(response.getResults());
+
+        BaseResponseDTO<StoreAdapted> responseAdapted = new BaseResponseDTO<StoreAdapted>(
+                response.getCount(),
+                response.getNext(),
+                response.getPrevious(),
+                stores
         );
         return responseAdapted;
     }

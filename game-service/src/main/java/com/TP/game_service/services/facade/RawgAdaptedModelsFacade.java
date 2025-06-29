@@ -1,16 +1,11 @@
 package com.TP.game_service.services.facade;
 
-import com.TP.game_service.models.GameExtraInfoAdapted;
-import com.TP.game_service.models.Rawg.GameExtraInfo;
+import com.TP.game_service.models.*;
+import com.TP.game_service.models.Rawg.*;
 import com.TP.game_service.services.adapters.GameAdapter;
 import com.TP.game_service.services.adapters.GenreAdapter;
 import com.TP.game_service.services.adapters.PlatformAdapter;
-import com.TP.game_service.models.GameAdapted;
-import com.TP.game_service.models.GenreAdapted;
-import com.TP.game_service.models.PlatformAdapted;
-import com.TP.game_service.models.Rawg.Game;
-import com.TP.game_service.models.Rawg.Genre;
-import com.TP.game_service.models.Rawg.PlatformInfo;
+import com.TP.game_service.services.adapters.StoreAdapter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -23,6 +18,7 @@ public class RawgAdaptedModelsFacade {
     private final GameAdapter gameAdapter;
     private final PlatformAdapter platformAdapter;
     private final GenreAdapter genreAdapter;
+    private final StoreAdapter storeAdapter;
 
     public GameExtraInfoAdapted getGameById(GameExtraInfo game) {
         return gameAdapter.adapt(game);
@@ -38,9 +34,9 @@ public class RawgAdaptedModelsFacade {
         return gameAdaptedList;
     }
 
-    public List<PlatformAdapted> searchPlatforms(List<PlatformInfo> platforms) {
+    public List<PlatformAdapted> searchPlatforms(List<PlatformComplete> platforms) {
         List<PlatformAdapted> platformAdaptedList = new ArrayList<>();
-        for(PlatformInfo platform : platforms) {
+        for(PlatformComplete platform : platforms) {
             PlatformAdapted platformAdapted = platformAdapter.adapt(platform);
             platformAdaptedList.add(platformAdapted);
         }
@@ -48,13 +44,23 @@ public class RawgAdaptedModelsFacade {
         return platformAdaptedList;
     }
 
-    public List<GenreAdapted> searchGenres(List<Genre> genres) {
+    public List<GenreAdapted> searchGenres(List<GenreComplete> genres) {
         List<GenreAdapted> genreAdaptedList = new ArrayList<>();
-        for(Genre genre : genres) {
+        for(GenreComplete genre : genres) {
             GenreAdapted genreAdapted = genreAdapter.adapt(genre);
             genreAdaptedList.add(genreAdapted);
         }
 
         return genreAdaptedList;
+    }
+
+    public List<StoreAdapted> searchStores(List<StoreComplete> stores) {
+        List<StoreAdapted> storeAdaptedList = new ArrayList<>();
+        for(StoreComplete store : stores) {
+            StoreAdapted storeAdapted = storeAdapter.adapt(store);
+            storeAdaptedList.add(storeAdapted);
+        }
+
+        return storeAdaptedList;
     }
 }

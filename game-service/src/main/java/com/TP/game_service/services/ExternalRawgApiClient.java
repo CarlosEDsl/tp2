@@ -40,13 +40,13 @@ public class ExternalRawgApiClient {
         }
     }
 
-    public BaseResponseDTO<PlatformInfo> searchPlatforms(String url) {
+    public BaseResponseDTO<PlatformComplete> searchPlatforms(String url) {
         try {
-            ResponseEntity<BaseResponseDTO<PlatformInfo>> response = restTemplate.exchange(
+            ResponseEntity<BaseResponseDTO<PlatformComplete>> response = restTemplate.exchange(
                     url,
                     HttpMethod.GET,
                     null,
-                    new ParameterizedTypeReference<BaseResponseDTO<PlatformInfo>>() {}
+                    new ParameterizedTypeReference<BaseResponseDTO<PlatformComplete>>() {}
             );
 
             return response.getBody();
@@ -56,13 +56,29 @@ public class ExternalRawgApiClient {
         }
     }
 
-    public BaseResponseDTO<Genre> searchGenres(String url) {
+    public BaseResponseDTO<GenreComplete> searchGenres(String url) {
         try {
-            ResponseEntity<BaseResponseDTO<Genre>> response = restTemplate.exchange(
+            ResponseEntity<BaseResponseDTO<GenreComplete>> response = restTemplate.exchange(
                     url,
                     HttpMethod.GET,
                     null,
-                    new ParameterizedTypeReference<BaseResponseDTO<Genre>>() {}
+                    new ParameterizedTypeReference<BaseResponseDTO<GenreComplete>>() {}
+            );
+
+            return response.getBody();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    public BaseResponseDTO<StoreComplete> searchStores(String url) {
+        try {
+            ResponseEntity<BaseResponseDTO<StoreComplete>> response = restTemplate.exchange(
+                    url,
+                    HttpMethod.GET,
+                    null,
+                    new ParameterizedTypeReference<BaseResponseDTO<StoreComplete>>() {}
             );
 
             return response.getBody();

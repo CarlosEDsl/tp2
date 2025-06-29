@@ -9,7 +9,7 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class GenreSearchRequest {
+public class BaseSearchRequestDTO {
     private int page = 1;
     private int pageSize = 50;
     private String ordering;
