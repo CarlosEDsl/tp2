@@ -48,43 +48,68 @@ public class CatalogoService {
     }
 
     public BaseResponseDTO<PlatformAdapted> searchPlatforms(BaseSearchRequestDTO request) {
-        BaseResponseDTO<PlatformComplete> response = externalRawgApiClient.searchPlatforms(externalApiUrlsFacade.searchPlatforms(request));
-        List<PlatformAdapted> platforms = rawgAdaptedModelsFacade.searchPlatforms(response.getResults());
+        try {
+            BaseResponseDTO<PlatformComplete> response = externalRawgApiClient.searchPlatforms(externalApiUrlsFacade.searchPlatforms(request));
 
-        BaseResponseDTO<PlatformAdapted> responseAdapted = new BaseResponseDTO<PlatformAdapted>(
-                response.getCount(),
-                response.getNext(),
-                response.getPrevious(),
-                platforms
-        );
-        return responseAdapted;
+            List<PlatformAdapted> platforms =  new ArrayList<>();
+            if(response.getResults() != null && response.getResults().size() > 0) {
+                platforms = rawgAdaptedModelsFacade.searchPlatforms(response.getResults());
+            }
+
+            BaseResponseDTO<PlatformAdapted> responseAdapted = new BaseResponseDTO<PlatformAdapted>(
+                    response.getCount(),
+                    response.getNext(),
+                    response.getPrevious(),
+                    platforms
+            );
+            return responseAdapted;
+        }
+        catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
 
     public BaseResponseDTO<GenreAdapted> searchGenres(BaseSearchRequestDTO request) {
-        BaseResponseDTO<GenreComplete> response = externalRawgApiClient.searchGenres(externalApiUrlsFacade.searchGenres(request));
+        try {
+            BaseResponseDTO<GenreComplete> response = externalRawgApiClient.searchGenres(externalApiUrlsFacade.searchGenres(request));
 
-        List<GenreAdapted> genres = rawgAdaptedModelsFacade.searchGenres(response.getResults());
+            List<GenreAdapted> genres = new ArrayList<>();
+            if(response.getResults() != null && response.getResults().size() > 0) {
+                genres = rawgAdaptedModelsFacade.searchGenres(response.getResults());
+            }
 
-        BaseResponseDTO<GenreAdapted> responseAdapted = new BaseResponseDTO<GenreAdapted>(
-                response.getCount(),
-                response.getNext(),
-                response.getPrevious(),
-                genres
-        );
-        return responseAdapted;
+            BaseResponseDTO<GenreAdapted> responseAdapted = new BaseResponseDTO<GenreAdapted>(
+                    response.getCount(),
+                    response.getNext(),
+                    response.getPrevious(),
+                    genres
+            );
+            return responseAdapted;
+        }
+        catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
 
     public BaseResponseDTO<StoreAdapted> searchStores(BaseSearchRequestDTO request) {
-        BaseResponseDTO<StoreComplete> response = externalRawgApiClient.searchStores(externalApiUrlsFacade.searchStores(request));
+        try {
+            BaseResponseDTO<StoreComplete> response = externalRawgApiClient.searchStores(externalApiUrlsFacade.searchStores(request));
 
-        List<StoreAdapted> stores = rawgAdaptedModelsFacade.searchStores(response.getResults());
+            List<StoreAdapted> stores = new ArrayList<>();
+            if(response.getResults() != null && response.getResults().size() > 0) {
+                stores = rawgAdaptedModelsFacade.searchStores(response.getResults());
+            }
 
-        BaseResponseDTO<StoreAdapted> responseAdapted = new BaseResponseDTO<StoreAdapted>(
-                response.getCount(),
-                response.getNext(),
-                response.getPrevious(),
-                stores
-        );
-        return responseAdapted;
+            BaseResponseDTO<StoreAdapted> responseAdapted = new BaseResponseDTO<StoreAdapted>(
+                    response.getCount(),
+                    response.getNext(),
+                    response.getPrevious(),
+                    stores
+            );
+            return responseAdapted;
+        }
+        catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
 }
