@@ -42,7 +42,7 @@ public class FavoriteGameController {
                 return ResponseEntity.notFound().build();
             }
 
-            return ResponseEntity.ok(newFavoriteGame);
+            return ResponseEntity.ok().build();
         } catch (HttpMessageNotReadableException e) {
             e.printStackTrace();
             return ResponseEntity.badRequest().body("Erro ao processar os dados. Verifique o formato da requisição."); // Mensagem personalizada

@@ -12,7 +12,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 public class BaseResponseDTO<T> {
-    private Double count;
+    private int count;
     private String next;
     private String previous;
     private List<T> results;
