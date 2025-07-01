@@ -10,7 +10,7 @@
 
     <modules>
         <module>account-service</module>
-        <module>gameAdapted-service</module>
+        <module>game-service</module>
     </modules>
 
     <properties>
