@@ -1,5 +1,7 @@
 package com.TP.game_service.security;
 
+import io.jsonwebtoken.ExpiredJwtException;
+import io.jsonwebtoken.JwtException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -16,7 +18,7 @@ import java.util.Collections;
 import java.util.UUID;
 
 @Component
-public class JwtAuthFilter extends OncePerRequestFilter {
+public class  JwtAuthFilter extends OncePerRequestFilter {
 
     private final JwtService jwtService;
 
@@ -38,23 +40,34 @@ public class JwtAuthFilter extends OncePerRequestFilter {
         }
 
         final String token = authHeader.substring(7);
-        String username = jwtService.extractUsername(token);
-        UUID userId = jwtService.extractUserId(token);
 
-        if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
+        try {
+            String username = jwtService.extractUsername(token);
+            UUID userId = jwtService.extractUserId(token);
 
-            MinimalUserDetails userDetails = new MinimalUserDetails(username, userId);
+            if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
 
-            System.out.println("Token válido? " + jwtService.isTokenValid(token, userDetails));
-            if (jwtService.isTokenValid(token, userDetails)) {
-                UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
-                        userDetails, null, userDetails.getAuthorities()
-                );
-                authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
-                SecurityContextHolder.getContext().setAuthentication(authToken);
+                MinimalUserDetails userDetails = new MinimalUserDetails(username, userId);
+
+                System.out.println("Token válido? " + jwtService.isTokenValid(token, userDetails));
+                if (jwtService.isTokenValid(token, userDetails)) {
+                    UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
+                            userDetails, null, userDetails.getAuthorities()
+                    );
+                    authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+                    SecurityContextHolder.getContext().setAuthentication(authToken);
+                }
             }
-        }
 
-        filterChain.doFilter(request, response);
+            filterChain.doFilter(request, response);
+        } catch (ExpiredJwtException e) {
+            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+            response.setContentType("application/json");
+            response.getWriter().write("{\"error\": \"Token expirado. Por favor, autentique-se novamente.\"}");
+        } catch (JwtException e) {
+            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+            response.setContentType("application/json");
+            response.getWriter().write("{\"error\": \"Token JWT inválido.\"}");
+        }
     }
 }
