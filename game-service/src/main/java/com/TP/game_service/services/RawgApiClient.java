@@ -3,7 +3,6 @@ package com.TP.game_service.services;
 import com.TP.game_service.models.DTOs.BaseResponseDTO;
 import com.TP.game_service.models.Rawg.*;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
@@ -12,7 +11,7 @@ import org.springframework.web.client.RestTemplate;
 
 @Service
 @RequiredArgsConstructor
-public class ExternalRawgApiClient {
+public class RawgApiClient {
     private final RestTemplate restTemplate;
 
     public GameExtraInfo getGameById(String url) {

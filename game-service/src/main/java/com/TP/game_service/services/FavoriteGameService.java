@@ -1,15 +1,10 @@
 package com.TP.game_service.services;
 
 import com.TP.game_service.models.GameExtraInfoAdapted;
-import com.TP.game_service.services.facade.ExternalApiUrlsFacade;
-import com.TP.game_service.models.DTOs.FavoriteGameRequestDTO;
 import com.TP.game_service.models.FavoriteGame;
 import com.TP.game_service.repositories.FavoriteGameRepository;
 import com.TP.game_service.util.customExceptions.GameAlreadyFavoritedException;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
-import org.hibernate.sql.ast.tree.predicate.ExistsPredicate;
 import org.springframework.stereotype.Service;
 
 import java.util.List;

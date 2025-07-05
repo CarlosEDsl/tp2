@@ -1,42 +1,66 @@
 package com.TP.game_service.builders;
 
-import org.springframework.beans.factory.annotation.Value;
+import com.TP.game_service.interfaces.IRawgBuilder;
+import org.springframework.stereotype.Component;
 
-public class GenresUrlBuilder {
+@Component
+public class GenresUrlBuilder implements IRawgBuilder {
     private StringBuilder url;
-    private String rawgApiKey;
+    private String apiKey;
 
-    public GenresUrlBuilder(String rawgApiKey) {
-        url = new StringBuilder("https://api.rawg.io/api/genres?");
-        this.rawgApiKey = rawgApiKey;
+    public GenresUrlBuilder() {
+        url = new StringBuilder();
     }
 
-    public GenresUrlBuilder getById(Long id) {
+    @Override
+    public void reset() {
+        url = new StringBuilder();
+    }
+
+    @Override
+    public void setBaseUrl() {
+        url.append("https://api.rawg.io/api/genres?");
+    }
+
+    @Override
+    public void setApiKey(String apiKey) {
+        this.apiKey = apiKey;
+    }
+
+    @Override
+    public String getById(Long id) {
         url.setLength(0);
         url.append("https://api.rawg.io/api/genres/")
                 .append(id)
-                .append("?")
-                .append(rawgApiKey);
-        return this;
+                .append("?key=")
+                .append(apiKey);
+        String response = url.toString();
+        reset();
+
+        return response;
     }
 
-    public GenresUrlBuilder page(int page) {
+    @Override
+    public void page(int page) {
         url.append("&page=").append(page);
-        return this;
     }
 
-    public GenresUrlBuilder pageSize(int pageSize) {
+    @Override
+    public void pageSize(int pageSize) {
         url.append("&page_size=").append(pageSize).append("&");
-        return this;
     }
 
-    public GenresUrlBuilder ordering(String order) {
+    @Override
+    public void ordering(String order) {
         url.append("&ordering=-").append(order).append("&");
-        return this;
     }
 
+    @Override
     public String build() {
-        url.append("&key=").append(rawgApiKey);
-        return url.toString();
+        url.append("&key=").append(apiKey);
+        String response = url.toString();
+        reset();
+
+        return response;
     }
 }

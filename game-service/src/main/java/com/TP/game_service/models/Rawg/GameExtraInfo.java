@@ -128,7 +128,7 @@ public class GameExtraInfo {
     private List<ParentPlatform> parentPlatforms;
 
     private List<PlatformInfo> platforms;
-    private List<Store> stores;
+    private List<StoreInfo> stores;
     private List<Developer> developers;
     private List<Genre> genres;
     private List<Tag> tags;

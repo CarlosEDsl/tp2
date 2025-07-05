@@ -1,5 +1,6 @@
 package com.TP.game_service.models;
 
+import com.TP.game_service.models.Rawg.Store;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
@@ -21,4 +22,5 @@ public class GameExtraInfoAdapted {
     private String background_image;
     private List<PlatformAdapted> platforms;
     private List<GenreAdapted> genres;
+    private List<StoreAdapted> stores;
 }

@@ -1,72 +1,99 @@
 package com.TP.game_service.builders;
 
+import com.TP.game_service.interfaces.IRawgBuilder;
+import com.TP.game_service.interfaces.IRawgGameBuilder;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
 
-public class GamesUrlBuilder {
+@Component
+public class GamesUrlBuilder implements IRawgBuilder, IRawgGameBuilder {
     private StringBuilder url;
-    private String rawgApiKey;
+    private String apiKey;
 
-    public GamesUrlBuilder(String rawgApiKey) {
-        url = new StringBuilder("https://api.rawg.io/api/games?");
-        this.rawgApiKey = rawgApiKey;
+    public GamesUrlBuilder() {
+        url = new StringBuilder();
     }
 
-    public GamesUrlBuilder getById(Long id) { //para passar o id do game
+    @Override
+    public void reset() {
+        url = new StringBuilder();
+    }
+
+    @Override
+    public void setBaseUrl() {
+        url.append("https://api.rawg.io/api/games?");
+    }
+
+    @Override
+    public void setApiKey(String apiKey) {
+        this.apiKey = apiKey;
+    }
+
+    @Override
+    public String getById(Long id) {
         url.setLength(0);
         url.append("https://api.rawg.io/api/games/")
                 .append(id)
-                .append("?")
-                .append(rawgApiKey);
-        return this;
+                .append("?key=")
+                .append(apiKey);
+        String response = url.toString();
+        reset();
+
+        return response;
     }
 
-    public GamesUrlBuilder page(int page) { //define a pagina
+    @Override
+    public void page(int page) {
         url.append("&page=").append(page);
-        return this;
     }
 
-    public GamesUrlBuilder pageSize(int pageSize) { //define a quantidade por pagina
+    @Override
+    public void pageSize(int pageSize) {
         url.append("&page_size=").append(pageSize).append("&");
-        return this;
     }
 
-    public GamesUrlBuilder genre(String genre) { //para buscar por genero
+    @Override
+    public void genre(String genre) {
         url.append("&genres=").append(genre).append("&");
-        return this;
     }
 
-    public GamesUrlBuilder platform(Long platformId) { //para buscar por plataforma
+    @Override
+    public void platform(Long platformId) {
         url.append("&platforms=").append(platformId).append("&");
-        return this;
     }
 
-    public GamesUrlBuilder search(String query) { //barra de pesquisa
+    @Override
+    public void search(String query) {
         url.append("&search=").append(query).append("&");
-        return this;
     }
 
-    public GamesUrlBuilder ordering(String order) { //ordena os jogos em uma ordem baseado em uma variavel especifica
+    @Override
+    public void ordering(String order) {
         url.append("&ordering=-").append(order).append("&");
-        return this;
     }
 
-    public GamesUrlBuilder stores(int storeId) {
+    @Override
+    public void stores(int storeId) {
         url.append("&stores=").append(storeId).append("&");
-        return this;
     }
 
-    public GamesUrlBuilder searchExact(Boolean query) {
+    @Override
+    public void searchExact(Boolean query) {
         url.append("&search_exact=").append(query).append("&");
-        return this;
     }
 
-    public GamesUrlBuilder searchPrecise(Boolean query) {
+    @Override
+    public void searchPrecise(Boolean query) {
         url.append("&search_precise=").append(query).append("&");
-        return this;
     }
 
+    @Override
     public String build() {
-        url.append("&key=").append(rawgApiKey);
-        return url.toString();
+        url.append("&key=").append(apiKey);
+        String response = url.toString();
+        reset();
+
+        return response;
     }
 }

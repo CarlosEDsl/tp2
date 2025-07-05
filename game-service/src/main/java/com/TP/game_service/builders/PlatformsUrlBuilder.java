@@ -1,42 +1,67 @@
 package com.TP.game_service.builders;
 
+import com.TP.game_service.interfaces.IRawgBuilder;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
 
-public class PlatformsUrlBuilder {
+@Component
+public class PlatformsUrlBuilder implements IRawgBuilder {
     private StringBuilder url;
-    private String rawgApiKey;
+    private String apiKey;
 
-    public PlatformsUrlBuilder(String rawgApiKey) {
-        url = new StringBuilder("https://api.rawg.io/api/platforms?");
-        this.rawgApiKey = rawgApiKey;
+    public PlatformsUrlBuilder() {
+        url = new StringBuilder();
     }
 
-    public PlatformsUrlBuilder getById(Long id) {
+    @Override
+    public void reset() {
+        url = new StringBuilder();
+    }
+
+    @Override
+    public void setBaseUrl() {
+        url.append("https://api.rawg.io/api/platforms?");
+    }
+
+    @Override
+    public void setApiKey(String apiKey) {
+        this.apiKey = apiKey;
+    }
+
+    public String getById(Long id) {
         url.setLength(0);
         url.append("https://api.rawg.io/api/platforms/")
                 .append(id)
-                .append("?")
-                .append(rawgApiKey);
-        return this;
+                .append("?key=")
+                .append(apiKey);
+        String response = url.toString();
+        reset();
+
+        return response;
     }
 
-    public PlatformsUrlBuilder page(int page) {
+    @Override
+    public void page(int page) {
         url.append("&page=").append(page);
-        return this;
     }
 
-    public PlatformsUrlBuilder pageSize(int pageSize) {
+    @Override
+    public void pageSize(int pageSize) {
         url.append("&page_size=").append(pageSize).append("&");
-        return this;
     }
 
-    public PlatformsUrlBuilder ordering(String order) {
+    @Override
+    public void ordering(String order) {
         url.append("&ordering=-").append(order).append("&");
-        return this;
     }
 
+    @Override
     public String build() {
-        url.append("&key=").append(rawgApiKey);
-        return url.toString();
+        url.append("&key=").append(apiKey);
+        String response = url.toString();
+        reset();
+        setBaseUrl();
+
+        return response;
     }
 }
