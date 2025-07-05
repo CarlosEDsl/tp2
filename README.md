@@ -710,3 +710,276 @@ Exclui um jogo da lista de favoritos do usuário do sistema.
 * Nenhum conteúdo no corpo da resposta, indicando que o jogo favorito foi removido com sucesso.
 
 ---
+
+# **Documentação da API de Reviews**
+
+Esta documentação detalha os endpoints para o gerenciamento de posts, comentários, likes e avaliações de jogos.
+
+## **Recursos Principais**
+* **Posts**: Operações de CRUD para os posts (análises).
+* **Comentários**: Gerencia os comentários associados aos posts.
+* **Likes**: Gerencia os likes de posts.
+* **Avaliações (Rates)**: Permite avaliar um post.
+* **Likes**: Gerencia as curtidas (likes) dos posts.
+
+---
+
+## **Posts**
+
+Endpoints para criar, ler, atualizar e deletar posts.
+
+### `GET /posts/{id}`
+
+Busca um post específico pelo seu `ID`.
+
+**Parâmetro de URL**:
+* `id` (UUID): O ID único do post. Ex: `a1b2c3d4-e5f6-7890-1234-567890abcdef`
+
+**Resposta de Sucesso (200 OK)**:
+* Retorna o objeto `Post` completo.
+
+```json
+{
+  "id": "a1b2c3d4-e5f6-7890-1234-567890abcdef",
+  "authorId": "c6a9b4d0-9a8c-4a1e-8f2b-3c7d1e9f0a1b",
+  "gameId": "f0e9d8c7-b6a5-4321-fedc-ba9876543210",
+  "title": "Minha Análise Sobre o Jogo X",
+  "content": "Este jogo tem uma jogabilidade incrível e gráficos fantásticos...",
+  "imageURL": "[http://example.com/game_image.png](http://example.com/game_image.png)",
+  "ratingAVG": 4.5,
+  "createdAt": "2025-07-05T22:28:37.123456Z",
+  "updatedAt": "2025-07-05T22:28:37.123456Z"
+}
+```
+
+### `GET /posts/user/{userId}`
+
+Recupera uma lista com todos os posts de um usuário específico.
+
+**Parâmetro de URL**:
+* `userId` (UUID): O ID único do autor dos posts. Ex: `c6a9b4d0-9a8c-4a1e-8f2b-3c7d1e9f0a1b`
+
+**Resposta de Sucesso (200 OK)**:
+* Retorna um array de objetos `Post`.
+
+```json
+[
+  {
+    "id": "a1b2c3d4-e5f6-7890-1234-567890abcdef",
+    "authorId": "c6a9b4d0-9a8c-4a1e-8f2b-3c7d1e9f0a1b",
+    "gameId": "f0e9d8c7-b6a5-4321-fedc-ba9876543210",
+    "title": "Minha Análise Sobre o Jogo X",
+    "content": "Este jogo tem uma jogabilidade incrível...",
+    "imageURL": "[http://example.com/game_image.png](http://example.com/game_image.png)",
+    "ratingAVG": 4.5,
+    "createdAt": "2025-07-05T22:28:37.123456Z",
+    "updatedAt": "2025-07-05T22:28:37.123456Z"
+  }
+]
+```
+
+### `GET /posts`
+
+Recupera os posts mais recentes do sistema.
+
+**Resposta de Sucesso (200 OK)**:
+* Retorna uma lista dos posts mais recentes.
+
+### `POST /posts`
+
+Cria um novo post.
+
+**Corpo da Requisição (`CreatePostDTO`)**:
+
+```json
+{
+  "authorId": "c6a9b4d0-9a8c-4a1e-8f2b-3c7d1e9f0a1b",
+  "gameId": "f0e9d8c7-b6a5-4321-fedc-ba9876543210",
+  "title": "Novo Post Sobre Jogo Y",
+  "content": "Conteúdo detalhado da análise do jogo...",
+  "imageURL": "[http://example.com/new_post_image.png](http://example.com/new_post_image.png)"
+}
+```
+
+**Resposta de Sucesso (201 Created)**:
+* Retorna o objeto `Post` recém-criado.
+
+### `PUT /posts/{id}`
+
+Atualiza as informações de um post existente.
+
+**Parâmetro de URL**:
+* `id` (UUID): O ID do post a ser atualizado.
+
+**Corpo da Requisição (`Post`)**:
+
+```json
+{
+  "id": "a1b2c3d4-e5f6-7890-1234-567890abcdef",
+  "authorId": "c6a9b4d0-9a8c-4a1e-8f2b-3c7d1e9f0a1b",
+  "gameId": "f0e9d8c7-b6a5-4321-fedc-ba9876543210",
+  "title": "Título Atualizado da Análise",
+  "content": "Conteúdo atualizado e revisado.",
+  "imageURL": "[http://example.com/updated_image.png](http://example.com/updated_image.png)",
+  "ratingAVG": 4.8
+}
+```
+
+**Resposta de Sucesso (200 OK)**:
+* Retorna o objeto `Post` completo e atualizado.
+
+### `DELETE /posts/{id}`
+
+Exclui um post do sistema.
+
+**Parâmetro de URL**:
+* `id` (UUID): O ID do post a ser excluído.
+
+**Resposta de Sucesso (204 No Content)**:
+* Nenhum conteúdo no corpo da resposta.
+
+---
+
+## **Comentários**
+
+Endpoints para gerenciar comentários em posts.
+
+### `GET /comments/post/{postId}`
+
+Recupera todos os comentários de um post específico.
+
+**Parâmetro de URL**:
+* `postId` (UUID): O ID do post para o qual os comentários serão listados.
+
+**Resposta de Sucesso (200 OK)**:
+* Retorna uma lista de objetos `Comment`.
+
+```json
+[
+  {
+    "id": "11111111-2222-3333-4444-555555555555",
+    "userId": "c6a9b4d0-9a8c-4a1e-8f2b-3c7d1e9f0a1b",
+    "postId": "a1b2c3d4-e5f6-7890-1234-567890abcdef",
+    "content": "Ótima análise, concordo plenamente!",
+    "createdAt": "2025-07-06T10:15:00.123456Z"
+  }
+]
+```
+
+### `POST /comments`
+
+Cria um novo comentário em um post.
+
+**Corpo da Requisição (`CreateCommentDTO`)**:
+
+```json
+{
+  "userId": "d8b0c5e1-0b9d-5b2f-9g3c-4d8e2f0g1b2c",
+  "postId": "a1b2c3d4-e5f6-7890-1234-567890abcdef",
+  "content": "Não concordo com a parte sobre a trilha sonora, achei repetitiva."
+}
+```
+
+**Resposta de Sucesso (201 Created)**:
+* Retorna o objeto `Comment` recém-criado.
+
+### `DELETE /comments/{id}`
+
+Exclui um comentário.
+
+**Parâmetro de URL**:
+* `id` (UUID): O ID do comentário a ser excluído.
+
+**Resposta de Sucesso (204 No Content)**:
+* Nenhum conteúdo no corpo da resposta.
+
+---
+
+## **Likes**
+
+Endpoints para gerenciar likes em posts.
+
+### `GET /likes/post/{postId}`
+
+Retorna a contagem total de likes de um post específico.
+
+**Parâmetro de URL**:
+* `postId` (UUID): O ID do post.
+
+**Resposta de Sucesso (200 OK)**:
+* Retorna um número (`Double`) representando a contagem de likes.
+
+```json
+150.0
+```
+
+### `POST /likes`
+
+Adiciona um like a um post.
+
+**Corpo da Requisição (`Like`)**:
+
+```json
+{
+  "userId": "c6a9b4d0-9a8c-4a1e-8f2b-3c7d1e9f0a1b",
+  "postId": "a1b2c3d4-e5f6-7890-1234-567890abcdef"
+}
+```
+
+**Resposta de Sucesso (201 Created)**:
+* Retorna o objeto `Like` criado.
+
+### `DELETE /likes`
+
+Remove um like de um post.
+
+**Corpo da Requisição (`Like`)**:
+
+```json
+{
+  "userId": "c6a9b4d0-9a8c-4a1e-8f2b-3c7d1e9f0a1b",
+  "postId": "a1b2c3d4-e5f6-7890-1234-567890abcdef"
+}
+```
+
+**Resposta de Sucesso (204 No Content)**:
+* Nenhum conteúdo no corpo da resposta.
+
+---
+
+## **Avaliações (Rates)**
+
+Endpoints para atribuir e remover uma avaliação (nota) a um post.
+
+### `POST /rates`
+
+Insere ou atualiza a avaliação de um usuário para um post.
+
+**Corpo da Requisição (`RateDTO`)**:
+
+```json
+{
+  "userId": "c6a9b4d0-9a8c-4a1e-8f2b-3c7d1e9f0a1b",
+  "postId": "a1b2c3d4-e5f6-7890-1234-567890abcdef",
+  "rate": 5.0
+}
+```
+
+**Resposta de Sucesso (201 Created)**:
+* Nenhum conteúdo no corpo da resposta.
+
+### `DELETE /rates`
+
+Remove a avaliação de um usuário para um post.
+
+**Corpo da Requisição (`PostRate.RateId`)**:
+
+```json
+{
+  "userId": "c6a9b4d0-9a8c-4a1e-8f2b-3c7d1e9f0a1b",
+  "postId": "a1b2c3d4-e5f6-7890-1234-567890abcdef"
+}
+```
+
+**Resposta de Sucesso (204 No Content)**:
+* Nenhum conteúdo no corpo da resposta.
