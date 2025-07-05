@@ -14,10 +14,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Service
-@RequiredArgsConstructor
 public class CatalogoService {
     @Autowired
-    private final RawgFacade facade;
+    private RawgFacade facade;
 
     public GameExtraInfoAdapted getGameById(Long gameId) {
         try {

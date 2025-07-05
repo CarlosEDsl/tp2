@@ -5,6 +5,7 @@ import com.TP.game_service.models.FavoriteGame;
 import com.TP.game_service.repositories.FavoriteGameRepository;
 import com.TP.game_service.util.customExceptions.GameAlreadyFavoritedException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -12,10 +13,11 @@ import java.util.Optional;
 import java.util.UUID;
 
 @Service
-@RequiredArgsConstructor
 public class FavoriteGameService {
-    private final FavoriteGameRepository favoriteGameRepository;
-    private final CatalogoService catalogoService;
+    @Autowired
+    private FavoriteGameRepository favoriteGameRepository;
+    @Autowired
+    private CatalogoService catalogoService;
 
     public FavoriteGame saveNewFavoriteGame(Long gameId, UUID userId) throws Exception {
         try {
