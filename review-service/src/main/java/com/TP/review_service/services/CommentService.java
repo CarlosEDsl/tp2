@@ -1,5 +1,6 @@
 package com.TP.review_service.services;
 
+import com.TP.review_service.models.Comment;
 import com.TP.review_service.repositories.CommentRepository;
 import org.springframework.stereotype.Service;
 
@@ -10,6 +11,10 @@ public class CommentService {
 
     public CommentService(CommentRepository commentRepository) {
         this.commentRepository = commentRepository;
+    }
+
+    public Comment postComment() {
+
     }
 
 }

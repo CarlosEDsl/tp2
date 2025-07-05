@@ -1,5 +1,6 @@
 package com.TP.review_service.models;
 
+import com.TP.review_service.builders.PostBuilder;
 import com.TP.review_service.models.enums.Rate;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -13,9 +14,8 @@ import java.util.UUID;
 
 @Entity
 @Table(name = "posts")
-@Data
 @NoArgsConstructor
-@AllArgsConstructor
+@Data
 public class Post {
 
     @Id
@@ -47,4 +47,15 @@ public class Post {
     @UpdateTimestamp
     private Instant updatedAt;
 
+    public Post(PostBuilder builder) {
+        this.id = builder.getId();
+        this.authorId = builder.getAuthorId();
+        this.gameId = builder.getGameId();
+        this.title = builder.getTitle();
+        this.content = builder.getContent();
+        this.imageURL = builder.getImageURL();
+        this.ratingAVG = builder.getRatingAVG();
+        this.createdAt = builder.getCreatedAt();
+        this.updatedAt = builder.getUpdatedAt();
+    }
 }
