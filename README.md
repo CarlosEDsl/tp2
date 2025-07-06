@@ -811,17 +811,14 @@ Atualiza as informações de um post existente.
 **Parâmetro de URL**:
 * `id` (UUID): O ID do post a ser atualizado.
 
-**Corpo da Requisição (`Post`)**:
+**Corpo da Requisição (`UpdatePostDTO`)**:
 
 ```json
 {
-  "id": "a1b2c3d4-e5f6-7890-1234-567890abcdef",
-  "authorId": "c6a9b4d0-9a8c-4a1e-8f2b-3c7d1e9f0a1b",
   "gameId": "f0e9d8c7-b6a5-4321-fedc-ba9876543210",
   "title": "Título Atualizado da Análise",
   "content": "Conteúdo atualizado e revisado.",
-  "imageURL": "[http://example.com/updated_image.png](http://example.com/updated_image.png)",
-  "ratingAVG": 4.8
+  "imageURL": "[http://example.com/updated_image.png](http://example.com/updated_image.png)"
 }
 ```
 
