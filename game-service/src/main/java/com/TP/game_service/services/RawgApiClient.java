@@ -16,6 +16,10 @@ public class RawgApiClient {
 
     public GameExtraInfo getGameById(String url) {
         try {
+            if (url == null) {
+                return null;
+            }
+
             return restTemplate.getForObject(url, GameExtraInfo.class);
         } catch (Exception e) {
             e.printStackTrace();
@@ -25,6 +29,10 @@ public class RawgApiClient {
 
     public BaseResponseDTO<Game> searchGames(String url) {
         try {
+            if (url == null) {
+                return null;
+            }
+
             ResponseEntity<BaseResponseDTO<Game>> response = restTemplate.exchange(
                     url,
                     HttpMethod.GET,
@@ -41,6 +49,10 @@ public class RawgApiClient {
 
     public BaseResponseDTO<PlatformComplete> searchPlatforms(String url) {
         try {
+            if (url == null) {
+                return null;
+            }
+
             ResponseEntity<BaseResponseDTO<PlatformComplete>> response = restTemplate.exchange(
                     url,
                     HttpMethod.GET,
@@ -57,6 +69,10 @@ public class RawgApiClient {
 
     public BaseResponseDTO<GenreComplete> searchGenres(String url) {
         try {
+            if (url == null) {
+                return null;
+            }
+
             ResponseEntity<BaseResponseDTO<GenreComplete>> response = restTemplate.exchange(
                     url,
                     HttpMethod.GET,
@@ -73,6 +89,10 @@ public class RawgApiClient {
 
     public BaseResponseDTO<StoreComplete> searchStores(String url) {
         try {
+            if (url == null) {
+                return null;
+            }
+
             ResponseEntity<BaseResponseDTO<StoreComplete>> response = restTemplate.exchange(
                     url,
                     HttpMethod.GET,
