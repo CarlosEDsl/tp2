@@ -1,8 +1,10 @@
 package com.TP.review_service.services;
 
 import com.TP.review_service.commands.UpdateAverageCommand;
+import com.TP.review_service.exceptions.custom.BusinessRuleException;
 import com.TP.review_service.models.Like;
 import com.TP.review_service.repositories.LikeRepository;
+import com.TP.review_service.security.AuthValidator;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -14,9 +16,8 @@ public class LikeService {
     private final LikeRepository likeRepository;
     UpdateAverageCommand updateAverageCommand;
 
-    public LikeService(LikeRepository likeRepository, UpdateAverageCommand updateAverageCommand) {
+    public LikeService(LikeRepository likeRepository) {
         this.likeRepository = likeRepository;
-        this.updateAverageCommand = updateAverageCommand;
     }
 
     public Like postLike(Like like) {
@@ -24,13 +25,15 @@ public class LikeService {
         Optional<Like> likeFound = this.likeRepository.findById(likeId);
 
         likeFound.ifPresent(lf -> {
-            throw new IllegalStateException("Entidade já existe com esse ID!");
+            throw new BusinessRuleException("User already liked this post.");
         });
 
         return likeRepository.save(like);
     }
 
     public void removeLike(Like like) {
+        AuthValidator.checkIfUserIsAuthorized(like.getUserId());
+
         this.likeRepository.delete(like);
     }
 

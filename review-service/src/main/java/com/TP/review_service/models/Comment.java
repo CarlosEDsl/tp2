@@ -32,4 +32,10 @@ public class Comment {
     @CreationTimestamp
     @Column(updatable = false)
     private Instant createdAt;
+
+    public Comment(UUID postId, UUID userId, String content) {
+        this.postId = postId;
+        this.userId = userId;
+        this.content = content;
+    }
 }

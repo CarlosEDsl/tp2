@@ -9,7 +9,6 @@ import org.springframework.stereotype.Component;
 import java.util.List;
 import java.util.UUID;
 
-@Component
 public class UpdateAverageCommand implements Command {
 
     private final UUID postId;

@@ -5,36 +5,43 @@ import com.TP.review_service.models.DTO.RateDTO;
 import com.TP.review_service.models.PostRate;
 import com.TP.review_service.repositories.PostRateRepository;
 import com.TP.review_service.repositories.PostRepository;
+import com.TP.review_service.security.AuthValidator;
 import org.springframework.stereotype.Service;
-
-import java.util.UUID;
 
 @Service
 public class RateService {
 
-    private PostRateRepository postRateRepository;
-    private UpdateAverageCommand updateAverageCommand;
-    private PostRepository postRepository;
+    private final PostRateRepository postRateRepository;
+    private final PostRepository postRepository;
 
     public RateService(PostRateRepository postRateRepository,
-                       UpdateAverageCommand updateAverageCommand,
                        PostRepository postRepository) {
         this.postRateRepository = postRateRepository;
-        this.updateAverageCommand = updateAverageCommand;
         this.postRepository = postRepository;
     }
 
-    public boolean insertRate(RateDTO rateDTO) {
+    public void insertRate(RateDTO rateDTO) {
         PostRate postRate = PostRate.fromDTO(rateDTO);
 
-        if(!this.postRepository.existsById(rateDTO.postId())) {
+        if (!this.postRepository.existsById(rateDTO.postId())) {
             throw new RuntimeException("Post not found");
         }
 
         postRateRepository.save(postRate);
+
+        UpdateAverageCommand updateAverageCommand = new UpdateAverageCommand(rateDTO.postId(), postRepository, postRateRepository);
         updateAverageCommand.execute();
 
-        return true;
+    }
+
+    public void removeRate(PostRate.RateId rateId) {
+
+        AuthValidator.checkIfUserIsAuthorized(rateId.getUserId());
+
+        this.postRateRepository.deleteById(rateId);
+
+        UpdateAverageCommand updateAverageCommand = new UpdateAverageCommand(rateId.getPostId(), postRepository, postRateRepository);
+        updateAverageCommand.execute();
     }
 
 }

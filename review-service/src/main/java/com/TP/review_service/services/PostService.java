@@ -1,17 +1,19 @@
 package com.TP.review_service.services;
 
 import com.TP.review_service.builders.PostBuilder;
+import com.TP.review_service.exceptions.custom.ResourceNotFoundException;
 import com.TP.review_service.models.DTO.CreatePostDTO;
-import com.TP.review_service.models.DTO.NewestPostsDTO;
+import com.TP.review_service.models.DTO.UpdatePostDTO;
 import com.TP.review_service.models.Post;
 import com.TP.review_service.repositories.PostRepository;
+import com.TP.review_service.security.AuthValidator;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import java.time.Instant;
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -25,14 +27,14 @@ public class PostService {
 
     public Post getPostById(UUID id) {
         return postRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Post não encontrado"));
+                .orElseThrow(() -> new ResourceNotFoundException("Post com ID " + id + " não encontrado"));
     }
 
     public List<Post> getPostsFromUser(UUID userId) {
         return postRepository.findAllByAuthorId(userId);
     }
 
-    public List<Post> getNewestPosts(NewestPostsDTO newestPostsDTO) {
+    public List<Post> getNewestPosts() {
         Pageable pageable = PageRequest.of(0, 20, Sort.by("createdAt").descending());
         return postRepository.findAll(pageable).getContent();
     }
@@ -42,20 +44,23 @@ public class PostService {
         return postRepository.save(newPost);
     }
 
-    public Post updatePost(UUID id, Post updatedPost) {
+    public Post updatePost(UUID id, UpdatePostDTO updatedPost) {
         Post existingPost = postRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Post não encontrado"));
 
-        existingPost.setTitle(updatedPost.getTitle());
-        existingPost.setContent(updatedPost.getContent());
-        existingPost.setUpdatedAt(updatedPost.getUpdatedAt());
+        existingPost.setTitle(updatedPost.title());
+        existingPost.setContent(updatedPost.content());
+        existingPost.setGameId(updatedPost.gameId());
+        existingPost.setUpdatedAt(Instant.now());
 
         return postRepository.save(existingPost);
     }
 
     public void deletePost(UUID id) {
         Post existingPost = postRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Post não encontrado"));
+                .orElseThrow(() -> new ResourceNotFoundException("Post com ID " + id + " não encontrado"));
+
+        AuthValidator.checkIfUserIsAuthorized(existingPost.getAuthorId());
         postRepository.delete(existingPost);
     }
 

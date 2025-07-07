@@ -8,4 +8,5 @@ import java.util.UUID;
 
 public interface PostRateRepository extends JpaRepository<PostRate, PostRate.RateId> {
     List<PostRate> findAllByIdPostId(UUID postId);
+    PostRate findPostRateById(PostRate.RateId rateId);
 }
