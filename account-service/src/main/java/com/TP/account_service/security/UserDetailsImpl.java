@@ -8,6 +8,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.UUID;
 
 @Getter
 public class UserDetailsImpl implements UserDetails {
@@ -32,6 +33,8 @@ public class UserDetailsImpl implements UserDetails {
     public String getUsername() {
         return this.user.getUsername();
     }
+
+    public UUID getUserId() { return this.user.getId(); }
 
     @Override
     public boolean isAccountNonExpired() {
