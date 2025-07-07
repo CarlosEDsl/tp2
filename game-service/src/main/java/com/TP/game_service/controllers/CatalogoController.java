@@ -5,11 +5,9 @@ import com.TP.game_service.models.DTOs.BaseResponseDTO;
 import com.TP.game_service.models.DTOs.GameSearchRequestDTO;
 import com.TP.game_service.models.DTOs.BaseSearchRequestDTO;
 import com.TP.game_service.services.CatalogoService;
-import org.hibernate.annotations.NotFound;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 
 @RestController
 @RequestMapping("/catalogo")
@@ -36,7 +34,7 @@ public class CatalogoController {
     }
 
     @GetMapping("/rawg/searchGames")
-    public ResponseEntity<?> searchGames(@RequestBody GameSearchRequestDTO request) {
+    public ResponseEntity<?> searchGames(@ModelAttribute GameSearchRequestDTO request) {
         try {
             BaseResponseDTO<GameAdapted> response = catalogoService.searchGames(request);
             if(response.getResults().size() == 0) {
@@ -51,7 +49,7 @@ public class CatalogoController {
     }
 
     @GetMapping("/rawg/searchPlatforms")
-    public ResponseEntity<?> searchPlatforms(@RequestBody BaseSearchRequestDTO request) {
+    public ResponseEntity<?> searchPlatforms(@ModelAttribute BaseSearchRequestDTO request) {
         try {
             BaseResponseDTO<PlatformAdapted> response = catalogoService.searchPlatforms(request);
             if(response.getResults().size() == 0) {
@@ -66,7 +64,7 @@ public class CatalogoController {
     }
 
     @GetMapping("/rawg/searchGenres")
-    public ResponseEntity<?> searchGenres(@RequestBody BaseSearchRequestDTO request) {
+    public ResponseEntity<?> searchGenres(@ModelAttribute BaseSearchRequestDTO request) {
         try {
             BaseResponseDTO<GenreAdapted> response = catalogoService.searchGenres(request);
             if(response.getResults().size() == 0) {
@@ -81,7 +79,7 @@ public class CatalogoController {
     }
 
     @GetMapping("/rawg/searchStores")
-    public ResponseEntity<?> searchStores(@RequestBody BaseSearchRequestDTO request) {
+    public ResponseEntity<?> searchStores(@ModelAttribute BaseSearchRequestDTO request) {
         try {
             BaseResponseDTO<StoreAdapted> response = catalogoService.searchStores(request);
             if(response.getResults().size() == 0) {
