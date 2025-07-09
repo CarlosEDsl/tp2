@@ -3,7 +3,6 @@ package com.TP.review_service.models;
 import com.TP.review_service.builders.PostBuilder;
 import com.TP.review_service.models.enums.Rate;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
@@ -38,7 +37,8 @@ public class Post {
     private String imageURL;
 
     @Column
-    private Double ratingAVG;
+    @Enumerated
+    private Rate rate;
 
     @CreationTimestamp
     @Column(updatable = false)
@@ -54,7 +54,7 @@ public class Post {
         this.title = builder.getTitle();
         this.content = builder.getContent();
         this.imageURL = builder.getImageURL();
-        this.ratingAVG = builder.getRatingAVG();
+        this.rate = builder.getRate();
         this.createdAt = builder.getCreatedAt();
         this.updatedAt = builder.getUpdatedAt();
     }

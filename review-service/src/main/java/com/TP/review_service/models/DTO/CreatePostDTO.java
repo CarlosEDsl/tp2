@@ -1,4 +1,6 @@
 package com.TP.review_service.models.DTO;
+import com.TP.review_service.models.enums.Rate;
+
 import java.util.UUID;
 
 public record CreatePostDTO(
@@ -6,6 +8,7 @@ public record CreatePostDTO(
         UUID gameId,
         String title,
         String content,
-        String imageURL
+        String imageURL,
+        Double rate
 ) {}
 

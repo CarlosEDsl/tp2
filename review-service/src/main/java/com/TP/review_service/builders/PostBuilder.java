@@ -1,6 +1,7 @@
 package com.TP.review_service.builders;
 
 import com.TP.review_service.models.Post;
+import com.TP.review_service.models.enums.Rate;
 
 import java.time.Instant;
 import java.util.UUID;
@@ -13,7 +14,7 @@ public class PostBuilder {
     private String title;
     private String content;
     private String imageURL;
-    private Double ratingAVG;
+    private Rate rate;
     private Instant createdAt;
     private Instant updatedAt;
 
@@ -47,8 +48,8 @@ public class PostBuilder {
         return this;
     }
 
-    public PostBuilder ratingAVG(Double ratingAVG) {
-        this.ratingAVG = ratingAVG;
+    public PostBuilder rate(Rate rate) {
+        this.rate = rate;
         return this;
     }
 
@@ -72,7 +73,7 @@ public class PostBuilder {
     public String getTitle() { return title; }
     public String getContent() { return content; }
     public String getImageURL() { return imageURL; }
-    public Double getRatingAVG() { return ratingAVG; }
+    public Rate getRate() { return rate; }
     public Instant getCreatedAt() { return createdAt; }
     public Instant getUpdatedAt() { return updatedAt; }
 }

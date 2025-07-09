@@ -1,12 +1,16 @@
 package com.TP.review_service.services;
 
 import com.TP.review_service.builders.PostBuilder;
+import com.TP.review_service.commands.UpdateAverageCommand;
 import com.TP.review_service.exceptions.custom.ResourceNotFoundException;
 import com.TP.review_service.models.DTO.CreatePostDTO;
 import com.TP.review_service.models.DTO.UpdatePostDTO;
 import com.TP.review_service.models.Post;
+import com.TP.review_service.models.enums.Rate;
+import com.TP.review_service.rabbitmq.NotificationSender;
 import com.TP.review_service.repositories.PostRepository;
 import com.TP.review_service.security.AuthValidator;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -20,10 +24,13 @@ import java.util.UUID;
 public class PostService {
 
     private final PostRepository postRepository;
+    private final NotificationSender notificationSender;
 
-    public PostService(PostRepository postRepository) {
+    public PostService(PostRepository postRepository, NotificationSender notificationSender) {
         this.postRepository = postRepository;
+        this.notificationSender = notificationSender;
     }
+
 
     public Post getPostById(UUID id) {
         return postRepository.findById(id)
@@ -41,7 +48,13 @@ public class PostService {
 
     public Post createPost(CreatePostDTO postDTO) {
         Post newPost = this.postFromDTO(postDTO);
-        return postRepository.save(newPost);
+        Post postInserted = this.postRepository.save(newPost);
+
+        UpdateAverageCommand updateAverageCommand = new UpdateAverageCommand(
+                postInserted.getId(), this.postRepository, this.notificationSender);
+        updateAverageCommand.execute();
+
+        return postInserted;
     }
 
     public Post updatePost(UUID id, UpdatePostDTO updatedPost) {
@@ -65,12 +78,15 @@ public class PostService {
     }
 
     public Post postFromDTO(CreatePostDTO createPostDTO) {
+        Rate rate = Rate.fromValue(createPostDTO.rate());
+
         return new PostBuilder()
                 .authorId(createPostDTO.authorId())
                 .gameId(createPostDTO.gameId())
                 .title(createPostDTO.title())
                 .content(createPostDTO.content())
                 .imageURL(createPostDTO.imageURL())
+                .rate(rate)
                 .build();
     }
 }

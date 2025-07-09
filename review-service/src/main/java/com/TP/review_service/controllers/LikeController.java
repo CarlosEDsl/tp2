@@ -25,6 +25,7 @@ public class LikeController {
         AuthValidator.checkIfUserIsAuthorized(like.getUserId());
 
         Like createdLike = likeService.postLike(like);
+
         return new ResponseEntity<>(createdLike, HttpStatus.CREATED);
     }
 

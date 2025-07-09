@@ -6,17 +6,21 @@ import com.TP.game_service.models.DTOs.BaseResponseDTO;
 import com.TP.game_service.models.Rawg.*;
 import com.TP.game_service.models.DTOs.GameSearchRequestDTO;
 import com.TP.game_service.models.DTOs.BaseSearchRequestDTO;
+import com.TP.game_service.repositories.GameRatingRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 @Service
 public class CatalogoService {
     @Autowired
     private RawgFacade facade;
+    @Autowired
+    private GameRatingRepository gameRatingRepository;
 
     public GameExtraInfoAdapted getGameById(Long gameId) {
         try {
@@ -66,5 +70,10 @@ public class CatalogoService {
         catch (Exception e) {
             throw e;
         }
+    }
+
+    public void insertNewGameAVG(GameRating gameRating) {
+        System.out.println("teste");
+        this.gameRatingRepository.save(gameRating);
     }
 }
