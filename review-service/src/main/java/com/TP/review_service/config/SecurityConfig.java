@@ -23,6 +23,7 @@ public class SecurityConfig {
         http.csrf(AbstractHttpConfigurer::disable)
                 .cors(cors -> {})
                 .authorizeHttpRequests(auth -> auth
+                        .requestMatchers("/robots933456.txt", "/health", "/").permitAll()
                         .requestMatchers("/comments/post/**").permitAll()
                         .anyRequest().authenticated()
                 )
