@@ -17,7 +17,7 @@ import java.util.UUID;
 public class GameRating {
 
     @Id
-    private UUID gameId;
+    private long gameId;
 
     private Double rating;
 }

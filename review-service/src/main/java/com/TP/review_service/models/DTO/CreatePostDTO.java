@@ -5,7 +5,7 @@ import java.util.UUID;
 
 public record CreatePostDTO(
         UUID authorId,
-        UUID gameId,
+        long gameId,
         String title,
         String content,
         String imageURL,

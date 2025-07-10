@@ -25,7 +25,7 @@ public class Post {
     private UUID authorId;
 
     @Column(nullable = false)
-    private UUID gameId;
+    private long gameId;
 
     @Column(nullable = false)
     private String title;

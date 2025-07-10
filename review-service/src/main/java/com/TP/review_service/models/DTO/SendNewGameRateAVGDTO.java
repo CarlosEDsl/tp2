@@ -4,6 +4,6 @@ import java.util.UUID;
 
 public record SendNewGameRateAVGDTO(
         Double rating,
-        UUID gameId
+        long gameId
 ) {
 }

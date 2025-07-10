@@ -1,6 +1,6 @@
-package com.TP.review_service.config;
+package com.TP.notifications.config;
 
-import com.TP.review_service.security.JwtAuthFilter;
+import com.TP.notifications.security.JwtAuthFilter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -24,9 +24,6 @@ public class SecurityConfig {
                 .cors(cors -> {})
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/robots933456.txt", "/health", "/").permitAll()
-                        .requestMatchers("/comments/post/**").permitAll()
-                        .requestMatchers("/posts/user/**", "/posts").permitAll()
-                        .requestMatchers("/likes/post/").permitAll()
                         .anyRequest().authenticated()
                 )
 

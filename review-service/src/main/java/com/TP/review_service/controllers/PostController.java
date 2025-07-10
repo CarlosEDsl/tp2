@@ -27,18 +27,13 @@ public class PostController {
 
     @GetMapping("/{id}")
     public ResponseEntity<Post> getPostById(@PathVariable("id") UUID id) {
-
-        AuthValidator.checkIfUserIsAuthorized(id);
-
         Post post = postService.getPostById(id);
+
         return ResponseEntity.ok(post);
     }
 
     @GetMapping("/user/{userId}")
     public ResponseEntity<List<Post>> getPostsFromUser(@PathVariable("userId") UUID userId) {
-
-        AuthValidator.checkIfUserIsAuthorized(userId);
-
         List<Post> posts = postService.getPostsFromUser(userId);
         return ResponseEntity.ok(posts);
     }

@@ -10,7 +10,7 @@ public class PostBuilder {
 
     private UUID id;
     private UUID authorId;
-    private UUID gameId;
+    private long gameId;
     private String title;
     private String content;
     private String imageURL;
@@ -28,7 +28,7 @@ public class PostBuilder {
         return this;
     }
 
-    public PostBuilder gameId(UUID gameId) {
+    public PostBuilder gameId(long gameId) {
         this.gameId = gameId;
         return this;
     }
@@ -69,7 +69,7 @@ public class PostBuilder {
 
     public UUID getId() { return id; }
     public UUID getAuthorId() { return authorId; }
-    public UUID getGameId() { return gameId; }
+    public long getGameId() { return gameId; }
     public String getTitle() { return title; }
     public String getContent() { return content; }
     public String getImageURL() { return imageURL; }

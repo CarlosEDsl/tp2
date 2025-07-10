@@ -17,6 +17,7 @@ public class NotificationEventHandler {
 
     @RabbitListener(queues = "notifications", containerFactory = "rabbitListenerContainerFactory")
     public void handleMessage(CreateNotificationDTO createNotificationDTO) {
+        System.out.println(createNotificationDTO + "NOTIFICAÇÃO");
         notificationService.createNotification(createNotificationDTO);
     }
 

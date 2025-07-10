@@ -11,7 +11,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
-@RestController("/notification")
+@RestController
+@RequestMapping("/notification")
 public class NotificationController {
 
     private final NotificationService notificationService;
@@ -23,19 +24,19 @@ public class NotificationController {
     }
 
     @GetMapping("/{userId}")
-    public ResponseEntity<List<Notification>> getUserNotifications(@PathVariable UUID userId) {
+    public ResponseEntity<List<Notification>> getUserNotifications(@PathVariable("userId") UUID userId) {
         List<Notification> userNotifications = this.notificationService.getAllNotificationsToUser(userId);
         return ResponseEntity.ok(userNotifications);
     }
 
     @GetMapping("/newest/{userId}")
-    public ResponseEntity<List<Notification>> getNewestUserNotifications(@PathVariable UUID userId) {
+    public ResponseEntity<List<Notification>> getNewestUserNotifications(@PathVariable("userId") UUID userId) {
         List<Notification> userNotifications = this.notificationService.getNonReadNotificationsToUser(userId);
         return ResponseEntity.ok(userNotifications);
     }
 
     @PatchMapping("/read/{notfId}")
-    public ResponseEntity<Void> markNotificationAsRead(@PathVariable UUID notfId) {
+    public ResponseEntity<Void> markNotificationAsRead(@PathVariable("notfId") UUID notfId) {
         this.notificationService.markAsRead(notfId);
         return ResponseEntity.noContent().build();
     }

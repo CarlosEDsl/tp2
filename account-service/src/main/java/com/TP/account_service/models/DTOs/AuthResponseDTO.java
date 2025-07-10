@@ -1,4 +1,6 @@
 package com.TP.account_service.models.DTOs;
 
-public record AuthResponseDTO(String token) {
+import com.TP.account_service.models.User;
+
+public record AuthResponseDTO(String token, User user) {
 }

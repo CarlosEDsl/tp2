@@ -1,7 +1,10 @@
 package com.TP.notifications.models;
 
 import jakarta.persistence.*;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.Instant;
@@ -9,6 +12,8 @@ import java.util.UUID;
 
 @Entity
 @NoArgsConstructor
+@ToString
+@Getter
 public class Notification {
 
     public Notification(UUID receiverId, UUID senderId, String type, String redirect) {

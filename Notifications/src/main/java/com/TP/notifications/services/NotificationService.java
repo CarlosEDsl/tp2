@@ -28,10 +28,11 @@ public class NotificationService {
         return this.notificationRepository.findByReceiverIdOrderByCreatedAtDesc(receiver_id);
     }
 
-    public Notification createNotification(CreateNotificationDTO dto) {
+    public void createNotification(CreateNotificationDTO dto) {
         Notification notification = this.notificationFromDTO(dto);
+        System.out.println(notification);
         try {
-            return notificationRepository.save(notification);
+            notificationRepository.save(notification);
         } catch (Exception e) {
             throw new NotificationCreationException("Erro ao criar notificação", e);
         }

@@ -14,5 +14,5 @@ public interface PostRepository extends JpaRepository<Post, UUID> {
     List<Post> findAllByAuthorId(UUID authorId);
 
     @Query("SELECT p.rate FROM Post p WHERE p.gameId = :gameId")
-    List<Rate> findRatingByGameId(@Param("gameId") UUID gameId);
+    List<Rate> findRatingByGameId(@Param("gameId") long gameId);
 }
