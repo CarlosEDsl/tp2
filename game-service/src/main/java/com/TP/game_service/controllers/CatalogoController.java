@@ -92,4 +92,19 @@ public class CatalogoController {
                     .body("Erro ao buscar lojas: " + e.getMessage());
         }
     }
+
+    @GetMapping("/rawg/getTopGames")
+    public ResponseEntity<?> getTopGames() {
+        try {
+            BaseResponseDTO<GameAdapted> response = catalogoService.getTopGames();
+            if(response.getResults().size() == 0) {
+                return ResponseEntity.noContent().build();
+            }
+
+            return ResponseEntity.ok(response);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Erro ao buscar lojas: " + e.getMessage());
+        }
+    }
 }

@@ -2,8 +2,6 @@ package com.TP.game_service.builders;
 
 import com.TP.game_service.interfaces.IRawgBuilder;
 import com.TP.game_service.interfaces.IRawgGameBuilder;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -87,6 +85,12 @@ public class GamesUrlBuilder implements IRawgBuilder, IRawgGameBuilder {
     public void searchPrecise(Boolean query) {
         url.append("&search_precise=").append(query).append("&");
     }
+
+    @Override
+    public void metacritic(String metacritic) { url.append("&metacritic=").append(metacritic).append("&"); }
+
+    @Override
+    public void excludeAdditions(boolean excludeAdditions) { url.append("&exclude_additions=").append(excludeAdditions).append("&"); }
 
     @Override
     public String build() {

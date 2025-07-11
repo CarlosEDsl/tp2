@@ -75,4 +75,15 @@ public class RawgDirector {
         String url = builder.build();
         return url;
     }
+
+    public String getTopGames() {
+        builder.setBaseUrl();
+        builder.setApiKey(apiKey);
+        builder.ordering("rating");
+        gameBuilder.metacritic("80,100");
+        gameBuilder.excludeAdditions(true);
+
+        String url = builder.build();
+        return url;
+    }
 }

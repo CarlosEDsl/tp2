@@ -7,4 +7,6 @@ public interface IRawgGameBuilder {
     void stores(int storeId);
     void searchExact(Boolean query);
     void searchPrecise(Boolean query);
+    void metacritic(String metacritic);
+    void excludeAdditions(boolean excludeAdditions);
 }

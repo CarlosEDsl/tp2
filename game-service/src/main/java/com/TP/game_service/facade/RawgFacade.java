@@ -47,7 +47,6 @@ public class RawgFacade {
 
     public GameExtraInfoAdapted getGameById(Long gameId) {
         director.setBuilder(gamesUrlBuilder);
-        System.out.println("Builder setado é da classe: " + gamesUrlBuilder.getClass().getName());
         String url = director.getById(gameId);
         System.out.println("url: " + url);
 
@@ -142,5 +141,25 @@ public class RawgFacade {
         );
 
         return responseAdapted;
+    }
+
+    public List<GameAdapted> getTopGames() {
+        director.setBuilder(gamesUrlBuilder);
+        String url = director.getTopGames();
+
+        BaseResponseDTO<Game> response = apiClient.searchGames(url);
+        List<GameAdapted> gameAdapteds = new ArrayList<>();
+
+        for (Game game : response.getResults()) {
+            if(game.getRatingsCount() > 500) {
+                GameAdapted gameAdapted = gameMapper.adapt(game);
+
+                if(gameAdapteds.size() < 10) {
+                    gameAdapteds.add(gameAdapted);
+                }
+            }
+        }
+
+        return gameAdapteds;
     }
 }

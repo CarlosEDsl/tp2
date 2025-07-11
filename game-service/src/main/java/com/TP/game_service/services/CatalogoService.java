@@ -72,6 +72,24 @@ public class CatalogoService {
         }
     }
 
+    public BaseResponseDTO<GameAdapted> getTopGames() {
+        try {
+            List<GameAdapted> response = facade.getTopGames();
+
+            BaseResponseDTO<GameAdapted> responseAdapted = new BaseResponseDTO<GameAdapted>(
+                    response.size(),
+                    null,
+                    null,
+                    response
+            );
+
+            return responseAdapted;
+        }
+        catch (Exception e) {
+            throw e;
+        }
+    }
+
     public void insertNewGameAVG(GameRating gameRating) {
         System.out.println("teste");
         this.gameRatingRepository.save(gameRating);
