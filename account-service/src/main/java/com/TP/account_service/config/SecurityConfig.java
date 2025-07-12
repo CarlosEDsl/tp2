@@ -45,6 +45,7 @@ public class SecurityConfig {
                         .requestMatchers("/robots933456.txt", "/health", "/").permitAll()
                         .requestMatchers("/auth/**").permitAll()
                         .requestMatchers(HttpMethod.POST, "/user").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/user/publicProfile/**").permitAll()
                         .requestMatchers("/error").permitAll()
                         .anyRequest().authenticated()
                 )

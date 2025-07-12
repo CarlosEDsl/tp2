@@ -1,6 +1,7 @@
 package com.TP.account_service.services;
 
 import com.TP.account_service.factory.UserFactory;
+import com.TP.account_service.models.DTOs.PublicProfileResponseDTO;
 import com.TP.account_service.models.DTOs.UserRequestDTO;
 import com.TP.account_service.repositories.UserRepository;
 import com.TP.account_service.models.DTOs.UserUpdateReqDTO;
@@ -78,4 +79,18 @@ public class UserService {
         }
     }
 
+    public PublicProfileResponseDTO getPublicProfileById(UUID id) {
+        Optional<User> userFound = this.userRepository.findById(id);
+        if(userFound.isEmpty()){
+            throw new RuntimeException("Usuário não encontrado no ID específicado");
+        }
+
+        PublicProfileResponseDTO publicProfile = new PublicProfileResponseDTO(
+                userFound.get().getUsername(),
+                userFound.get().getAvatarUrl(),
+                userFound.get().getBio()
+        );
+
+        return publicProfile;
+    }
 }
