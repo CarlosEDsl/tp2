@@ -1,10 +1,11 @@
 package com.TP.game_service.services;
 
-import com.TP.game_service.models.DTOs.FavoriteGameRequestDTO;
+import com.TP.game_service.models.GameExtraInfoAdapted;
 import com.TP.game_service.models.FavoriteGame;
 import com.TP.game_service.repositories.FavoriteGameRepository;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import com.TP.game_service.util.customExceptions.GameAlreadyFavoritedException;
+import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -13,43 +14,33 @@ import java.util.UUID;
 
 @Service
 public class FavoriteGameService {
-    private final FavoriteGameRepository favoriteGameRepository;
-    private final RawgApiFacade rawgApiFacade;
+    @Autowired
+    private FavoriteGameRepository favoriteGameRepository;
+    @Autowired
+    private CatalogoService catalogoService;
 
-    public FavoriteGameService(FavoriteGameRepository favoriteGameRepository, RawgApiFacade rawgApiFacade) {
-        this.favoriteGameRepository = favoriteGameRepository;
-        this.rawgApiFacade = rawgApiFacade;
-    }
-
-    public void saveNewFavoriteGame(FavoriteGameRequestDTO favoriteGame, UUID userId) {
-        String response = rawgApiFacade.getGameById(favoriteGame.gameId());
-
-        if (response == null) {
-            System.out.println("Erro na resposta: Nenhuma resposta recebida.");
-            return;
-        }
-
+    public FavoriteGame saveNewFavoriteGame(Long gameId, UUID userId) throws Exception {
         try {
-            ObjectMapper mapper = new ObjectMapper();
-            JsonNode root = mapper.readTree(response);
+            GameExtraInfoAdapted gameInfo = catalogoService.getGameById(gameId);
 
-            if (root.has("detail") && "Not found.".equals(root.get("detail").asText())) {
-                System.out.println("Erro: Recurso não encontrado!");
-                return;
+            if (gameInfo == null) {
+                return null;
             }
-        } catch (Exception e) {
-            System.out.println("Erro ao processar a resposta JSON: " + e.getMessage());
-            return;
+
+            boolean exists = favoriteGameRepository
+                    .findByUserIdAndGameId(userId, gameId)
+                    .isPresent();
+
+            if (!exists) {
+                FavoriteGame newFavoriteGame = new FavoriteGame(gameId, userId);
+                favoriteGameRepository.save(newFavoriteGame);
+                return newFavoriteGame;
+            } else {
+                throw new GameAlreadyFavoritedException("Jogo já está nos seus favoritos");
+            }
         }
-
-        boolean exists = favoriteGameRepository
-                .findByUserIdAndGameId(userId, favoriteGame.gameId())
-                .isPresent();
-
-        if (!exists) {
-            System.out.println(userId);
-            FavoriteGame newFavoriteGame = new FavoriteGame(favoriteGame.gameId(), userId);
-            favoriteGameRepository.save(newFavoriteGame);
+        catch (Exception e) {
+            throw e;
         }
     }
 
@@ -61,7 +52,13 @@ public class FavoriteGameService {
         return favoriteGameRepository.findFavoriteGamesByUserId(userId);
     }
 
-    public void deleteFavoriteGame(int gameId, UUID userId) {
-        favoriteGameRepository.deleteByUserIdAndGameId(userId, gameId);
+    public boolean deleteFavoriteGame(Long gameId, UUID userId) {
+        Optional<FavoriteGame> exists = favoriteGameRepository.findByUserIdAndGameId(userId, gameId);
+        if(exists.isPresent()) {
+            favoriteGameRepository.delete(exists.get());
+            return true;
+        } else {
+            return false;
+        }
     }
 }

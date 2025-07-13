@@ -1,8 +1,8 @@
 package com.TP.review_service.models;
 
+import com.TP.review_service.builders.PostBuilder;
 import com.TP.review_service.models.enums.Rate;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
@@ -13,9 +13,8 @@ import java.util.UUID;
 
 @Entity
 @Table(name = "posts")
-@Data
 @NoArgsConstructor
-@AllArgsConstructor
+@Data
 public class Post {
 
     @Id
@@ -26,7 +25,7 @@ public class Post {
     private UUID authorId;
 
     @Column(nullable = false)
-    private UUID gameId;
+    private long gameId;
 
     @Column(nullable = false)
     private String title;
@@ -38,7 +37,8 @@ public class Post {
     private String imageURL;
 
     @Column
-    private Double ratingAVG;
+    @Enumerated
+    private Rate rate;
 
     @CreationTimestamp
     @Column(updatable = false)
@@ -47,4 +47,15 @@ public class Post {
     @UpdateTimestamp
     private Instant updatedAt;
 
+    public Post(PostBuilder builder) {
+        this.id = builder.getId();
+        this.authorId = builder.getAuthorId();
+        this.gameId = builder.getGameId();
+        this.title = builder.getTitle();
+        this.content = builder.getContent();
+        this.imageURL = builder.getImageURL();
+        this.rate = builder.getRate();
+        this.createdAt = builder.getCreatedAt();
+        this.updatedAt = builder.getUpdatedAt();
+    }
 }

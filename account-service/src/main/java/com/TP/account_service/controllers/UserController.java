@@ -1,5 +1,6 @@
 package com.TP.account_service.controllers;
 
+import com.TP.account_service.models.DTOs.PublicProfileResponseDTO;
 import com.TP.account_service.models.DTOs.UserRequestDTO;
 import com.TP.account_service.models.User;
 import com.TP.account_service.services.UserService;
@@ -71,6 +72,12 @@ public class UserController {
     public ResponseEntity<Void> deleteUser(@PathVariable UUID id) {
         this.userService.deleteUser(id);
         return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping("/publicProfile/{id}")
+    public ResponseEntity<PublicProfileResponseDTO> getPublicProfileById(@PathVariable UUID id) {
+        PublicProfileResponseDTO publicProfile = this.userService.getPublicProfileById(id);
+        return ResponseEntity.ok(publicProfile);
     }
 
 }

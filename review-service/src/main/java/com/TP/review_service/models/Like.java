@@ -17,11 +17,11 @@ import java.util.UUID;
 public class Like {
 
     @Id
-    @Column(nullable = false)
+    @Column(name = "user_id", nullable = false)
     private UUID userId;
 
     @Id
-    @Column(nullable = false)
+    @Column(name = "post_id", nullable = false)
     private UUID postId;
 
     @Data
