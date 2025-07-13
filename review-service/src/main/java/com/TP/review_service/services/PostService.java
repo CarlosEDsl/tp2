@@ -1,6 +1,7 @@
 package com.TP.review_service.services;
 
 import com.TP.review_service.builders.PostBuilder;
+import com.TP.review_service.builders.PostDirector;
 import com.TP.review_service.commands.UpdateAverageCommand;
 import com.TP.review_service.commands.dispatcher.CommandDispatcher;
 import com.TP.review_service.exceptions.custom.ResourceNotFoundException;
@@ -25,12 +26,14 @@ public class PostService {
 
     private final PostRepository postRepository;
     private final NotificationSender notificationSender;
-    private CommandDispatcher commandDispatcher;
+    private final CommandDispatcher commandDispatcher;
+    private final PostDirector postDirector;
 
-    public PostService(PostRepository postRepository, NotificationSender notificationSender, CommandDispatcher commandDispatcher) {
+    public PostService(PostRepository postRepository, NotificationSender notificationSender, CommandDispatcher commandDispatcher, PostDirector postDirector) {
         this.postRepository = postRepository;
         this.notificationSender = notificationSender;
         this.commandDispatcher = commandDispatcher;
+        this.postDirector = postDirector;
     }
 
     public void updateGameAverage(UUID postId) {
@@ -56,7 +59,7 @@ public class PostService {
     public Post createPost(CreatePostDTO postDTO) {
         AuthValidator.checkIfUserIsAuthorized(postDTO.authorId());
 
-        Post newPost = this.postFromDTO(postDTO);
+        Post newPost = this.postDirector.constructFromDTO(postDTO);
         Post postInserted = this.postRepository.save(newPost);
 
         this.updateGameAverage(postInserted.getId());
@@ -91,16 +94,4 @@ public class PostService {
         postRepository.delete(existingPost);
     }
 
-    public Post postFromDTO(CreatePostDTO createPostDTO) {
-        Rate rate = Rate.fromValue(createPostDTO.rate());
-
-        return new PostBuilder()
-                .authorId(createPostDTO.authorId())
-                .gameId(createPostDTO.gameId())
-                .title(createPostDTO.title())
-                .content(createPostDTO.content())
-                .imageURL(createPostDTO.imageURL())
-                .rate(rate)
-                .build();
-    }
 }
