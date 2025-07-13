@@ -1,6 +1,5 @@
-package com.TP.account_service.loginStrategies.strategies;
+package com.TP.account_service.strategies;
 
-import com.TP.account_service.loginStrategies.LoginStrategy;
 import com.TP.account_service.models.DTOs.AuthRequestDTO;
 import com.TP.account_service.models.DTOs.AuthResponseDTO;
 import com.TP.account_service.models.User;
