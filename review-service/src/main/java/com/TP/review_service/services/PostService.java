@@ -2,6 +2,7 @@ package com.TP.review_service.services;
 
 import com.TP.review_service.builders.PostBuilder;
 import com.TP.review_service.commands.UpdateAverageCommand;
+import com.TP.review_service.commands.dispatcher.CommandDispatcher;
 import com.TP.review_service.exceptions.custom.ResourceNotFoundException;
 import com.TP.review_service.models.DTO.CreatePostDTO;
 import com.TP.review_service.models.DTO.UpdatePostDTO;
@@ -10,7 +11,6 @@ import com.TP.review_service.models.enums.Rate;
 import com.TP.review_service.rabbitmq.NotificationSender;
 import com.TP.review_service.repositories.PostRepository;
 import com.TP.review_service.security.AuthValidator;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -25,10 +25,17 @@ public class PostService {
 
     private final PostRepository postRepository;
     private final NotificationSender notificationSender;
+    private CommandDispatcher commandDispatcher;
 
-    public PostService(PostRepository postRepository, NotificationSender notificationSender) {
+    public PostService(PostRepository postRepository, NotificationSender notificationSender, CommandDispatcher commandDispatcher) {
         this.postRepository = postRepository;
         this.notificationSender = notificationSender;
+        this.commandDispatcher = commandDispatcher;
+    }
+
+    public void updateGameAverage(UUID postId) {
+        UpdateAverageCommand command = new UpdateAverageCommand(postId, postRepository, notificationSender);
+        commandDispatcher.dispatch(command);
     }
 
 
@@ -47,12 +54,12 @@ public class PostService {
     }
 
     public Post createPost(CreatePostDTO postDTO) {
+        AuthValidator.checkIfUserIsAuthorized(postDTO.authorId());
+
         Post newPost = this.postFromDTO(postDTO);
         Post postInserted = this.postRepository.save(newPost);
 
-        UpdateAverageCommand updateAverageCommand = new UpdateAverageCommand(
-                postInserted.getId(), this.postRepository, this.notificationSender);
-        updateAverageCommand.execute();
+        this.updateGameAverage(postInserted.getId());
 
         return postInserted;
     }
@@ -60,6 +67,11 @@ public class PostService {
     public Post updatePost(UUID id, UpdatePostDTO updatedPost) {
         Post existingPost = postRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Post não encontrado"));
+
+        AuthValidator.checkIfUserIsAuthorized(existingPost.getAuthorId());
+
+        if(existingPost.getRate().value != updatedPost.rate())
+            this.updateGameAverage(id);
 
         existingPost.setTitle(updatedPost.title());
         existingPost.setContent(updatedPost.content());
@@ -74,6 +86,8 @@ public class PostService {
                 .orElseThrow(() -> new ResourceNotFoundException("Post com ID " + id + " não encontrado"));
 
         AuthValidator.checkIfUserIsAuthorized(existingPost.getAuthorId());
+        this.updateGameAverage(id);
+
         postRepository.delete(existingPost);
     }
 

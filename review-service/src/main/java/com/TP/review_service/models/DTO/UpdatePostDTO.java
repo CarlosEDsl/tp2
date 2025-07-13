@@ -6,5 +6,6 @@ public record UpdatePostDTO(
         long gameId,
         String title,
         String content,
-        String imageURL
+        String imageURL,
+        long rate
 ) {}

@@ -46,18 +46,12 @@ public class PostController {
 
     @PostMapping
     public ResponseEntity<Post> createPost(@RequestBody CreatePostDTO postDTO) {
-
-        AuthValidator.checkIfUserIsAuthorized(postDTO.authorId());
-
         Post createdPost = postService.createPost(postDTO);
         return new ResponseEntity<>(createdPost, HttpStatus.CREATED);
     }
 
     @PutMapping("/{id}")
     public ResponseEntity<Post> updatePost(@PathVariable("id") UUID id, @RequestBody UpdatePostDTO updatedPost) {
-
-        AuthValidator.checkIfUserIsAuthorized(id);
-
         Post post = postService.updatePost(id, updatedPost);
         return ResponseEntity.ok(post);
     }
