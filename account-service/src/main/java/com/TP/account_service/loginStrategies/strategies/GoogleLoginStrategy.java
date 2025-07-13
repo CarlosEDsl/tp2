@@ -2,6 +2,7 @@ package com.TP.account_service.loginStrategies.strategies;
 
 import com.TP.account_service.loginStrategies.LoginStrategy;
 import com.TP.account_service.models.DTOs.AuthRequestDTO;
+import com.TP.account_service.models.DTOs.AuthResponseDTO;
 import com.TP.account_service.models.User;
 import com.TP.account_service.security.JwtService;
 import com.TP.account_service.services.UserService;
@@ -21,7 +22,7 @@ public class GoogleLoginStrategy implements LoginStrategy {
     }
 
     @Override
-    public String login(AuthRequestDTO authDTO) {
+    public AuthResponseDTO login(AuthRequestDTO authDTO) {
         GoogleIdToken.Payload payload = GoogleTokenVerifier.verifyGoogleToken(authDTO.token());
         if (payload == null) {
             throw new RuntimeException("ID Token inválido");
@@ -29,10 +30,10 @@ public class GoogleLoginStrategy implements LoginStrategy {
 
         // Salva ou atualiza no banco
         User user = userService.getOrSaveGoogleAccount(payload);
-
         // Gera o TOKEN
         String token = jwtService.generateToken(user.getEmail(), user.getId());
-        return token;
+
+        return new AuthResponseDTO("Bearer " + token, user);
 
     }
 }
