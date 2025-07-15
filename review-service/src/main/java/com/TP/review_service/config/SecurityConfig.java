@@ -26,7 +26,7 @@ public class SecurityConfig {
                         .requestMatchers("/robots933456.txt", "/health", "/").permitAll()
                         .requestMatchers("/comments/post/**").permitAll()
                         .requestMatchers("/posts/user/**", "/posts").permitAll()
-                        .requestMatchers("/likes/post/").permitAll()
+                        .requestMatchers("/likes/post/", "/likes/isLiked/**").permitAll()
                         .anyRequest().authenticated()
                 )
 
@@ -38,8 +38,7 @@ public class SecurityConfig {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration config = new CorsConfiguration();
-        config.setAllowedOriginPatterns(List.of("http://localhost:5173"));
-        config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
+        config.setAllowedOriginPatterns(List.of("http://localhost:5173", "https://project-questboard.vercel.app"));        config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
         config.setAllowedHeaders(List.of("Authorization", "Content-Type", "X-CSRF-Signature"));
         config.setAllowCredentials(true);
 

@@ -44,4 +44,11 @@ public class LikeController {
         return ResponseEntity.ok(likeCount);
     }
 
+    @GetMapping("/isLiked/{userId}/{postId}")
+    public ResponseEntity<Boolean> isLiked(@PathVariable("userId") UUID userId,
+                                           @PathVariable("postId") UUID postId) {
+        boolean liked = likeService.isPostLikedByUser(userId, postId);
+        return ResponseEntity.ok(liked);
+    }
+
 }

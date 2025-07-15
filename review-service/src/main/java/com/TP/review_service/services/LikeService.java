@@ -2,6 +2,7 @@ package com.TP.review_service.services;
 
 import com.TP.review_service.commands.UpdateAverageCommand;
 import com.TP.review_service.exceptions.custom.BusinessRuleException;
+import com.TP.review_service.exceptions.custom.ResourceNotFoundException;
 import com.TP.review_service.models.DTO.CreateNotificationDTO;
 import com.TP.review_service.models.Like;
 import com.TP.review_service.models.Post;
@@ -30,6 +31,7 @@ public class LikeService {
     public Like postLike(Like like) {
         Like.LikeId likeId = new Like.LikeId(like.getUserId(), like.getPostId());
         Optional<Like> likeFound = this.likeRepository.findById(likeId);
+        System.out.println(likeFound);
 
         likeFound.ifPresent(lf -> {
             throw new BusinessRuleException("User already liked this post.");
@@ -52,11 +54,21 @@ public class LikeService {
 
     private void notificateLike(UUID senderId, UUID postId) {
         Optional<Post> post = this.postRepository.findById(postId);
+
+        if(post.isEmpty()) {
+            throw new ResourceNotFoundException("Post not found");
+        }
+
         UUID receiverId = post.get().getAuthorId();
 
         CreateNotificationDTO notification = new CreateNotificationDTO(receiverId, senderId, "Like", "/"+postId);
 
         this.notificationSender.sendNotification(notification);
+    }
+
+    public boolean isPostLikedByUser(UUID userId, UUID postId) {
+        Optional<Like> like = this.likeRepository.findLikeByUserIdAndPostId(userId, postId);
+        return like.isPresent();
     }
 
 }

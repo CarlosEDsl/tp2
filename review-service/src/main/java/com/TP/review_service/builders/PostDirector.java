@@ -13,7 +13,7 @@ public class PostDirector {
 
     public Post constructFromDTO(CreatePostDTO dto) {
         return new PostBuilder()
-                .id(UUID.randomUUID())  // gera novo ID
+                .id(UUID.randomUUID())
                 .authorId(dto.authorId())
                 .gameId(dto.gameId())
                 .title(dto.title())
