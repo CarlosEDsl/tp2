@@ -14,6 +14,7 @@ import java.util.UUID;
 @NoArgsConstructor
 @ToString
 @Getter
+@Setter
 public class Notification {
 
     public Notification(UUID receiverId, UUID senderId, String type, String redirect) {

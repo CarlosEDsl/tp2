@@ -8,7 +8,7 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 public class PublicProfileResponseDTO {
-    private String username;
-    private String avatarUrl;
-    private String bio;
+    public String username;
+    public String avatarUrl;
+    public String bio;
 }
